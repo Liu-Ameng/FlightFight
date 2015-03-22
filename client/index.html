@@ -1,0 +1,66 @@
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="img/favicon.ico">
+
+<title>Games on HTML5 - Flight Fight</title>
+<link
+  href="http://cdn.bootcss.com/bootstrap/3.3.2/css/bootstrap.min.css"
+  rel="stylesheet">
+<link href="css/common.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- Static navbar -->
+  <nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed"
+          data-toggle="collapse" data-target="#navbar"
+          aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span> 
+          <span class="icon-bar"></span> 
+          <span class="icon-bar"></span> 
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Games on HTML5</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">点右上角，分享给朋友</a></li>
+          <li><a href="https://github.com/Liu-Ameng/Idea01/issues">留言</a></li>
+          <li><a href="https://github.com/Liu-Ameng/Idea01">Source code</a></li>
+        </ul>
+      </div>
+      <!--/.nav-collapse -->
+    </div>
+  </nav>
+
+  <div class="container canvas-container">
+      <canvas id="game-canvas" width="600" height="600">
+          您的浏览器不支持canvas！
+      </canvas>
+  </div>
+  <!-- /container -->
+
+
+  <script src="js/libs/jquery-1.11.2.min.js"></script>
+  <script
+    src="http://cdn.bootcss.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <script src="js/libs/easeljs-0.8.0.min.js"></script>
+  <!--
+  <script src="js/libs/handlebars-v1.3.0.js"></script>
+  <script src="js/libs/ember.js"></script>
+  <script src="js/libs/ember-data.js"></script>
+  -->
+  <script src="js/libs/socket.io-1.2.0.js"></script>
+  <script src="js/application.js"></script>
+  <script src="js/view.js"></script>
+
+</body>
+</html>

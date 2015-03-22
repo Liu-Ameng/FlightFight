@@ -1,0 +1,30 @@
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  line-height: 1.4em;
+  margin: 0 auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  -ms-font-smoothing: antialiased;
+  -o-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+}
+
+.navbar-static-top {
+  margin-bottom: 19px;
+}
+
+.canvas-container {
+  width: 95%;
+  height: auto;
+  border: 2px solid #CCC;
+  overflow: auto;
+}
+
+#game-canvas {
+  margin: auto;
+}
