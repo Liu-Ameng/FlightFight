@@ -51,6 +51,8 @@ var util = require('util');
      */
     function FlyObj() {
         var self = this;
+        this.name = '';
+        this.type = '';
         this.p = new Point(); //position
         this.v = new Velocity(); //speed
         this.img = '';
@@ -67,8 +69,9 @@ var util = require('util');
         var data = {
             x: this.p.x,
             y: this.p.y,
-            img: this.img,
-            angle: this.v.angle
+            angle: this.v.angle,
+            type: this.type,
+            name: this.name
         };
         return data;
     };
@@ -82,9 +85,10 @@ var util = require('util');
 
     FlyObj.prototype.move = function() {
         this.p.move(this.v);
-        if (this.isOutOfRange === true) {
-            this.whenOutOfRange();
+        if (this.isOutOfRange() === true) {
+            return this.whenOutOfRange();
         }
+        return false;
     };
 
     FlyObj.prototype.isOutOfRange = function() {
@@ -96,12 +100,18 @@ var util = require('util');
     };
 
     //@interface
-    FlyObj.prototype.whenOutOfRange = function() {};
+    FlyObj.prototype.whenOutOfRange = function() {
+        return true;
+    };
 
     /*
      * class Flight extends FlyObj
      */
     function Flight(owner) {
+        Flight.super_.call(this);
+
+        this.type = 'f';
+        this.name = owner;
         this.v.speed = CONST.flightSpeed;
         this.v.angle = Math.random() * 2 * Math.PI;
         this.p.set(CONST.stageSize * Math.random(), CONST.stageSize * Math.random());
@@ -114,6 +124,7 @@ var util = require('util');
     //@override
     FlyObj.prototype.whenOutOfRange = function() {
         this.p.set(CONST.stageSize - this.p.x, CONST.stageSize - this.p.y);
+        return false;
     };
 
     util.inherits(Flight, FlyObj);
@@ -122,10 +133,14 @@ var util = require('util');
      * class Flight extends FlyObj
      */
     function Bullet(flight) {
+        Bullet.super_.call(this);
+
         this.v.speed = CONST.bulletSpeed;
+        this.type = 'b';
         this.img = CONST.bulletImg;
         this.crashCheckRange = CONST.bulletCrashRange;
         if (flight instanceof Flight) {
+            this.name = flight.name;
             this.owner = flight.owner;
             this.v.angle = flight.v.angle;
             this.p.set(flight.p.x, flight.p.y);
@@ -133,8 +148,9 @@ var util = require('util');
     }
     util.inherits(Flight, FlyObj);
 
-    module.exports.createFlight = function() {
-        //return a flight
+    module.exports.createFlight = function(id) {
+        var f = new Flight(id);
+        return f;
     };
 
     module.exports.fire = function(flight) {

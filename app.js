@@ -15,3 +15,4 @@ server.listen(3000, function(){
 
 var myEventHandler = require('./server/event-handler.js');
 myEventHandler.init(io);
+myEventHandler.gameBegin();
