@@ -27,10 +27,10 @@ var async = require('async');
      * class Player
      */
     function Player(id, socket) {
-        this.id = id;
+        this.id = socket.id;
         this.name = id.toString();
         this.socket = socket;
-        this.flight = flyObj.createFlight(id.toString());
+        this.flight = flyObj.createFlight(socket.id);
         this.score = 0;
     }
 
@@ -61,6 +61,15 @@ var async = require('async');
                 }
             }
         },
+		
+		playerRotateLeft: function(socket) {
+			for (var key in this.players) {
+                if (this.players[key] !== null && this.players[key].socket == socket) {
+					this.players[key].flight.rotateLeft();
+                    break;
+                }
+            }
+		},
 
         queryPlayer: function(id) {
             return this.players[id.toString()];
@@ -114,6 +123,11 @@ var async = require('async');
             console.log('[' + (new Date()).toString() + '] a user connected. ');
             var newPlayer = AllPlayers.playerJoin(socket);
             newPlayer.sendId();
+			
+			socket.on('rotate-left', function() {
+				console.log('[' + (new Date()).toString() + '] a user rotate left. ');
+				AllPlayers.playerRotateLeft(socket);
+			});
 
             socket.on('disconnect', function() {
                 console.log('[' + (new Date()).toString() + '] a user left. ');

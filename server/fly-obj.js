@@ -36,7 +36,7 @@ var util = require('util');
     Point.prototype.move = function(velocity) {
         //caution: y的方向与笛卡尔坐标系是相反的
         this.x += velocity.speed * Math.cos(velocity.angle);
-        this.y += velocity.speed * Math.cos(velocity.angle);
+        this.y += velocity.speed * Math.sin(velocity.angle);
     };
 
     function getDistanceSquar(p1, p2) {
@@ -118,6 +118,12 @@ var util = require('util');
         this.owner = owner;
         this.img = CONST.flightImg;
         this.crashCheckRange = CONST.flightCrashRange;
+		
+		Flight.prototype.rotateLeft = function() {
+			this.v.angle += Math.PI / 30;
+			if (this.v.angle > 2 * Math.PI) this.v.angle -= (2 * Math.PI);
+			console.log(this.v.angle + ', ' + this.v.speed);
+		}
     }
         //Flight.prototype.speedUp() {};
 

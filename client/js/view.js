@@ -7,6 +7,7 @@ FF.View = function(data) {
     this.xOffset = 10;
     this.yOffset = 10;
     this.allFlyObjs = [];
+	this.id = '';
     createjs.Touch.enable(this.stage);
 };
 
@@ -27,6 +28,7 @@ FF.View.prototype.updateFlyObj = function(resObj) {
         if (flyObj.name === resObj.name && flyObj.type === resObj.type) {
             flyObj.x = resObj.x;
             flyObj.y = resObj.y;
+			flyObj.rotation = resObj.angle * 180 / Math.PI;
             return flyObj;
         }
     }
@@ -37,11 +39,17 @@ FF.View.prototype.createFlyObj = function(resObj) {
     var self = this;
     if(resObj.type === 'f') {
         var img = new Image();
-        img.src = '../img/flight.png';
+		if (resObj.name === self.id) {
+			img.src = '../img/my-flight.png';
+		}
+		else {
+			img.src = '../img/flight.png';
+		}
         img.onload = function() {
             var f = new createjs.Bitmap(img);
             f.x = resObj.x;
             f.y = resObj.y;
+			f.rotation = resObj.angle * 180 / Math.PI;
             f.scaleX = 0.25;
             f.scaleY = 0.25;
             f.alpha = 0.8;
@@ -71,17 +79,35 @@ $(document).ready(function() {
         height: canvas.height,
         stage: new createjs.Stage('game-canvas')
     });
+	
+	circle = new createjs.Shape();
+    circle.graphics.beginFill("red").drawCircle(0, 0, 20);
+    //Set position of Shape instance.
+    circle.x = circle.y = 40;
+    //Add Shape instance to stage display list.
+    view.stage.addChild(circle);
+    //Update stage will render next frame
+    view.stage.update();
+	circle.x = circle.y = 80;
+	view.stage.update();
 
     var socket = io();
     console.log('Get connected!');
+	
+	circle.addEventListener("click", handleClick);
+	function handleClick(event){
+     // Click happenened
+	 console.log("click");
+	 socket.emit('rotate-left', 'rotate-left');
+	}
 
     socket.on('send-id', function(res) {
-        FF.playerId = res;
-        console.debug(FF.playerId);
+        view.playerId = res;
+        //console.debug(FF.playerId);
     });
 
     socket.on('send-pos', function(res) {
-        console.debug(res);
+        //console.debug(res);
         view.paint(res);
     });
 
