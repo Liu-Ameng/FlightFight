@@ -1,0 +1,6 @@
+*.sublime-project
+*.sublime-workspace
+target/
+node_modules/
+
+client/chatroom/
