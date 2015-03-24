@@ -19,12 +19,42 @@ body {
 }
 
 .canvas-container {
-  width: 95%;
-  height: auto;
-  border: 2px solid #CCC;
-  overflow: auto;
+  width: 702px;
+  height: 702px;
+  /*border: 2px solid #CCC;*/
+  margin: 5px auto;
 }
 
 #game-canvas {
-  margin: auto;
+  border-radius: 10px;
+  border: 10px solid #B3B3B3;
+  border-top-color: #6B6B6B;
+  border-right-color: #A3A3A3;
+  border-left-color: #7B7B7B;
+}
+
+.info {
+  height: 400px;
+  width: 100%;
+}
+
+#move-control-canvas {
+  border: 1px dashed;
+  border-radius: 80px;
+}
+
+ul {
+  padding-left: 0;
+}
+
+.info li {
+  list-style-type:none;
+  margin-bottom: 4px;
+  font-size: 150%;
+}
+
+.btn-xlg {
+  font-size: 200%;
+  width: 120px;
+  height: 120px;
 }

@@ -41,10 +41,39 @@
     </div>
   </nav>
 
-  <div class="container canvas-container">
-      <canvas id="game-canvas" width="600" height="600">
-          您的浏览器不支持canvas！
-      </canvas>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2">
+        <div class="info">
+        </div>
+        <div class="left-control">
+          <canvas id="move-control-canvas" width="160" height="160">
+          </canvas>
+        </div>
+      </div>
+      <div class="col-md-7">
+        <div class="canvas-container">
+          <canvas id="game-canvas" width="700" height="700">
+              您的浏览器不支持canvas！
+          </canvas>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <ul class="info">
+            <li>Life</li>
+            <li> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span></li>
+            <li> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span></li>
+            <li></li>
+            <li>Shoot down</li>
+            <li> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span></li>
+            <li> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span></li>
+        </ul>
+        <div class="right-control">
+          <button id="btn-fire" type="button" class="btn btn-danger btn-xlg">Fire</button>
+          <button id="btn-fire" type="button" class="btn btn-danger btn-xlg">Block</button>
+        </div>
+      </div>
+    </div>
   </div>
   <!-- /container -->
 
