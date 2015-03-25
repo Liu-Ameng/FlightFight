@@ -16,8 +16,8 @@ FF.View.prototype.paint = function(res) {
         this.updateFlyObj(res[i]);
     }
     this.stage.update();
-    if (parent.controller.controlling) {
-        parent.controller.planeControl();
+    if (FF.controller.controlling) {
+        FF.controller.planeControl();
     }
 };
 

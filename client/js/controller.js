@@ -14,7 +14,9 @@ FF.Controller = function() {
         x: 40,
         y: 40,
     };
-    this.joystickRadius = 20;
+    this.joystickRadius = 30;
+	this.joystickDiff = 2;
+	this.joystickAlpha = 0.4;
 };
 
 FF.Controller.prototype.planeControl = function() {
@@ -22,11 +24,11 @@ FF.Controller.prototype.planeControl = function() {
         offset_speed: (this.joystickIniPos.y - this.joystickCurPos.y),
         offset_angle: (this.joystickCurPos.x - this.joystickIniPos.x)
     }
-    parent.socket.emit('control', data);
+    FF.socket.emit('control', data);
 };
 
 FF.Controller.prototype.planeResetSpeed = function() {
-    parent.socket.emit('resetSpeed');
+    FF.socket.emit('resetSpeed');
 };
 
 FF.Controller.prototype.speedUp = function() {
@@ -34,5 +36,5 @@ FF.Controller.prototype.speedUp = function() {
         offset_speed: 100,
         offset_angle: 0
     }
-    parent.socket.emit('control', data);
+    FF.socket.emit('control', data);
 }

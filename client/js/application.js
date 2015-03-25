@@ -19,13 +19,15 @@ $(document).ready(function() {
     }
     canvas.width = canvas.height;
 
-    view = new FF.View({
+    FF.view = new FF.View({
         width: canvas.width,
         height: canvas.height,
         stage: new createjs.Stage('game-canvas')
     });
+	var view = FF.view;
 
-    socket = io();
+    FF.socket = io();
+	var socket = FF.socket;
     console.log('Get connected!');
 
     socket.on('send-id', function(res) {
@@ -43,10 +45,19 @@ $(document).ready(function() {
         view.remove(res);
     });
 
-    controller = new FF.Controller();
+    FF.controller = new FF.Controller();
+	var controller = FF.controller;
 
     joystick = new createjs.Shape();
-    joystick.graphics.beginFill('red').drawCircle(0, 0, controller.joystickRadius);
+    joystick.graphics.beginFill('red').drawCircle(0, 0, controller.joystickRadius)
+		.beginFill('white').drawCircle(0, 0, controller.joystickRadius)
+		.beginFill('red').drawCircle(0, 0, (controller.joystickRadius - controller.joystickDiff))
+		.beginFill('red').drawCircle(0, 0, (controller.joystickRadius - controller.joystickDiff * 2))
+		.beginFill('red').drawCircle(0, 0, (controller.joystickRadius - controller.joystickDiff * 3))
+		.beginFill('red').drawCircle(0, 0, (controller.joystickRadius - controller.joystickDiff * 4))
+		.beginFill('red').drawCircle(0, 0, (controller.joystickRadius - controller.joystickDiff * 5))
+		.beginFill('white').drawCircle(controller.joystickDiff * 6, -controller.joystickDiff * 6, 3);
+	joystick.alpha = controller.joystickAlpha;
     joystick.x = controller.joystickIniPos.x;
     joystick.y = controller.joystickIniPos.y;
     controller.stage.addChild(joystick);
@@ -75,12 +86,15 @@ $(document).ready(function() {
 	
 	joystick.on('pressup', function(evt) {
 		controller.controlling = false;
-		evt.currentTarget.x = controller.joystickIniPos.x;
-		evt.currentTarget.y = controller.joystickIniPos.y;
 		controller.joystickCurPos.x = controller.joystickIniPos.x;
 		controller.joystickCurPos.y = controller.joystickIniPos.y;
 		controller.stage.update();
 		controller.planeResetSpeed();
+		createjs.Tween.get(joystick, {loop: false})
+			.to({x: controller.joystickIniPos.x, y: controller.joystickIniPos.y}, 
+			500, createjs.Ease.getPowInOut(4));
+        createjs.Ticker.setFPS(60);
+        createjs.Ticker.addEventListener("tick", controller.stage);
 	});
 	
 	multiControl = 0; // 1: left, 2: up, 3: right, 4: down, 5: left-up, 6: left- down, 7: right-up, 8: right-down
@@ -89,8 +103,12 @@ $(document).ready(function() {
 		if (event.keyCode == 37) {
 			if (multiControl != 0 && multiControl != 2 && multiControl != 4) return;
 			controller.controlling = true;
-			joystick.x = (controller.joystickIniPos.x - controller.joystickRange.x);
-			controller.joystickCurPos.x = joystick.x;
+			createjs.Tween.get(joystick, {loop: false})
+				.to({x: (controller.joystickIniPos.x - controller.joystickRange.x)}, 
+				500, createjs.Ease.getPowInOut(4));
+			createjs.Ticker.setFPS(60);
+			createjs.Ticker.addEventListener("tick", controller.stage);
+			controller.joystickCurPos.x = (controller.joystickIniPos.x - controller.joystickRange.x);
 			if (multiControl == 2) {
 				multiControl = 5;
 			}
@@ -105,8 +123,12 @@ $(document).ready(function() {
 		else if (event.keyCode == 38) {
 			if (multiControl != 0 && multiControl != 1 && multiControl != 3) return;
 			controller.controlling = true;
-			joystick.y = (controller.joystickIniPos.y - controller.joystickRange.y);
-			controller.joystickCurPos.y = joystick.y;
+			createjs.Tween.get(joystick, {loop: false})
+				.to({y: (controller.joystickIniPos.y - controller.joystickRange.y)}, 
+				500, createjs.Ease.getPowInOut(4));
+			createjs.Ticker.setFPS(60);
+			createjs.Ticker.addEventListener("tick", controller.stage);
+			controller.joystickCurPos.y = (controller.joystickIniPos.y - controller.joystickRange.y);
 			if (multiControl == 1) {
 				multiControl = 5;
 			}
@@ -121,8 +143,12 @@ $(document).ready(function() {
 		else if (event.keyCode == 39) {
 			if (multiControl != 0 && multiControl != 2 && multiControl != 4) return;
 			controller.controlling = true;
-			joystick.x = (controller.joystickIniPos.x + controller.joystickRange.x);
-			controller.joystickCurPos.x = joystick.x;
+			createjs.Tween.get(joystick, {loop: false})
+				.to({x: (controller.joystickIniPos.x + controller.joystickRange.x)}, 
+				500, createjs.Ease.getPowInOut(4));
+			createjs.Ticker.setFPS(60);
+			createjs.Ticker.addEventListener("tick", controller.stage);
+			controller.joystickCurPos.x = (controller.joystickIniPos.x + controller.joystickRange.x);
 			if (multiControl == 2) {
 				multiControl = 7;
 			}
@@ -137,8 +163,12 @@ $(document).ready(function() {
 		else if (event.keyCode == 40) {
 			if (multiControl != 0 && multiControl != 1 && multiControl != 3) return;
 			controller.controlling = true;
-			joystick.y = (controller.joystickIniPos.y + controller.joystickRange.y);
-			controller.joystickCurPos.y = joystick.y;
+			createjs.Tween.get(joystick, {loop: false})
+				.to({y: (controller.joystickIniPos.y + controller.joystickRange.y)}, 
+				500, createjs.Ease.getPowInOut(4));
+			createjs.Ticker.setFPS(60);
+			createjs.Ticker.addEventListener("tick", controller.stage);
+			controller.joystickCurPos.y = (controller.joystickIniPos.y + controller.joystickRange.y);
 			if (multiControl == 1) {
 				multiControl = 6;
 			}
@@ -155,8 +185,11 @@ $(document).ready(function() {
 	document.onkeyup = function(event) {
 		if (event.keyCode == 37) {
 			if (multiControl != 5 && multiControl != 6 && multiControl != 1) return;
-			controller.controlling = false;
-			joystick.x = controller.joystickIniPos.x;
+			createjs.Tween.get(joystick, {loop: false})
+				.to({x: controller.joystickIniPos.x}, 
+				500, createjs.Ease.getPowInOut(4));
+			createjs.Ticker.setFPS(60);
+			createjs.Ticker.addEventListener("tick", controller.stage);
 			controller.joystickCurPos.x = controller.joystickIniPos.x;
 			if (multiControl == 5) {
 				multiControl = 2;
@@ -169,14 +202,18 @@ $(document).ready(function() {
 			}
 			controller.stage.update();
 			if (multiControl == 0) {
-				controller.planeResetSpeed();
+				controller.controlling = false;
 			}
 		}
 		if (event.keyCode == 38) {
 			if (multiControl != 5 && multiControl != 7 && multiControl != 2) return;
-			controller.controlling = false;
-			joystick.y = controller.joystickIniPos.y;
+			createjs.Tween.get(joystick, {loop: false})
+				.to({y: controller.joystickIniPos.y}, 
+				500, createjs.Ease.getPowInOut(4));
+			createjs.Ticker.setFPS(60);
+			createjs.Ticker.addEventListener("tick", controller.stage);
 			controller.joystickCurPos.y = controller.joystickIniPos.y;
+			controller.planeResetSpeed();
 			if (multiControl == 5) {
 				multiControl = 1;
 			}
@@ -188,13 +225,16 @@ $(document).ready(function() {
 			}
 			controller.stage.update();
 			if (multiControl == 0) {
-				controller.planeResetSpeed();
+				controller.controlling = false;
 			}
 		}
 		if (event.keyCode == 39) {
 			if (multiControl != 7 && multiControl != 8 && multiControl != 3) return;
-			controller.controlling = false;
-			joystick.x = controller.joystickIniPos.x;
+			createjs.Tween.get(joystick, {loop: false})
+				.to({x: controller.joystickIniPos.x}, 
+				500, createjs.Ease.getPowInOut(4));
+			createjs.Ticker.setFPS(60);
+			createjs.Ticker.addEventListener("tick", controller.stage);
 			controller.joystickCurPos.x = controller.joystickIniPos.x;
 			if (multiControl == 7) {
 				multiControl = 2;
@@ -207,14 +247,18 @@ $(document).ready(function() {
 			}
 			controller.stage.update();
 			if (multiControl == 0) {
-				controller.planeResetSpeed();
+				controller.controlling = false;
 			}
 		}
 		if (event.keyCode == 40) {
 			if (multiControl != 6 && multiControl != 8 && multiControl != 4) return;
-			controller.controlling = false;
-			joystick.y = controller.joystickIniPos.y;
+			createjs.Tween.get(joystick, {loop: false})
+				.to({y: controller.joystickIniPos.y}, 
+				500, createjs.Ease.getPowInOut(4));
+			createjs.Ticker.setFPS(60);
+			createjs.Ticker.addEventListener("tick", controller.stage);
 			controller.joystickCurPos.y = controller.joystickIniPos.y;
+			controller.planeResetSpeed();
 			if (multiControl == 6) {
 				multiControl = 1;
 			}
@@ -226,7 +270,7 @@ $(document).ready(function() {
 			}
 			controller.stage.update();
 			if (multiControl == 0) {
-				controller.planeResetSpeed();
+				controller.controlling = false;
 			}
 		}
 	};

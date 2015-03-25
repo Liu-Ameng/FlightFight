@@ -144,7 +144,7 @@ var util = require('util');
 
     //@override
     FlyObj.prototype.whenOutOfRange = function() {
-        this.p.set(CONST.stageSize - this.p.x, CONST.stageSize - this.p.y);
+        this.p.set((this.p.x + CONST.stageSize) % CONST.stageSize, (this.p.y + CONST.stageSize) % CONST.stageSize);
         return false;
     };
 
