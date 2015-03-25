@@ -3,40 +3,40 @@ var async = require('async');
 
 (function EventHandlerDefine() {
 
+    Object.size = function(obj) {
+        var size = 0,
+            key;
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) size++;
+        }
+        return size;
+    };
+
     var CONST = {
         sendId: 'send-id',
         getKeyPress: 'get-key-press',
         sendPos: 'send-pos',
-        playerLeave:'player-leave',
-
-        stageSize: 700,
-        flightSpeed: 5,
-        bulletSpeed: 20,
-        flightCrashRange: 8,
-        bulletCrashRange: 2,
-        flightImg: 'flight',
-        bulletImg: 'bullet',
+        playerLeave: 'player-leave'
     };
 
     var self = this;
     var flyObj = require('./fly-obj.js');
-    var messages = [];
     var sockets = []; //all users <- TODO: Persistence
     this.io = null;
 
     /*
      * class Player
      */
-    function Player(id, socket) {
+    function Player(name, socket) {
         this.id = socket.id;
-        this.name = id.toString();
+        this.name = name;
         this.socket = socket;
-        this.flight = flyObj.createFlight(socket.id);
+        this.flight = flyObj.createFlight(this.id);
         this.score = 0;
     }
 
     Player.prototype.sendId = function() {
-        this.socket.emit(CONST.sendId, this.id.toString());
+        this.socket.emit(CONST.sendId, this.id);
     };
 
     /*
@@ -48,47 +48,49 @@ var async = require('async');
         players: {},
         flyings: [],
 
+        printNumberOfPlayer: function() {
+            console.log('[' + (new Date()).toString() + '] Online plyar: ' + Object.size(this.players));
+        },
+
         playerJoin: function(socket) {
-            var newPlayer = new Player(this.uniqueId++, socket);
-            this.players[newPlayer.name] = newPlayer;
+            var newPlayer = new Player("anonymity", socket);
+            this.players[socket.id] = newPlayer;
+
+            console.log('[' + (new Date()).toString() + '] a user connected. ');
+            this.printNumberOfPlayer();
             return newPlayer;
         },
 
         playerLeft: function(socket) {
-            var id ;
+            if (this.players[socket.id]) {
+                delete this.players[socket.id];
+
+                for (var key in this.players) {
+                    this.players[key].socket.emit(CONST.playerLeave, socket.id);
+                }
+
+                console.log('[' + (new Date()).toString() + '] player [id =' + socket.id + '] leave us.');
+                this.printNumberOfPlayer();
+            }
+        },
+
+        playerControl: function(socket, data) {
             for (var key in this.players) {
                 if (this.players[key] !== null && this.players[key].socket == socket) {
-                    id = socket.id;
-                    console.log('leave name is '+id);
-                    this.players[key] = null;
+                    this.players[key].flight.control(data);
                     break;
-                }
-            }
-            for (var key in this.players) {
-                p = this.players[key];
-                if (p !== null) {
-                    p.socket.emit(CONST.playerLeave, id);
                 }
             }
         },
-		
-		playerControl: function(socket, data) {
-			for (var key in this.players) {
+
+        playerResetSpeed: function(socket) {
+            for (var key in this.players) {
                 if (this.players[key] !== null && this.players[key].socket == socket) {
-					this.players[key].flight.control(data);
+                    this.players[key].flight.resetSpeed();
                     break;
                 }
             }
-		},
-		
-		playerResetSpeed: function(socket) {
-			for (var key in this.players) {
-                if (this.players[key] !== null && this.players[key].socket == socket) {
-					this.players[key].flight.resetSpeed();
-                    break;
-                }
-            }
-		},
+        },
 
         queryPlayer: function(id) {
             return this.players[id.toString()];
@@ -120,7 +122,7 @@ var async = require('async');
                     res.push(p.flight.toJson());
                 }
             }
-            if(hasPlayer === false){
+            if (hasPlayer === false) {
                 return;
             }
             for (key = 0; key < this.flyings.length; ++key) {
@@ -139,18 +141,18 @@ var async = require('async');
         this.io = io;
         io.on('connection', function(socket) {
 
-            console.log('[' + (new Date()).toString() + '] a user connected. ');
             var newPlayer = AllPlayers.playerJoin(socket);
             newPlayer.sendId();
-			
-			socket.on('control', function(data) {
-				console.log('[' + (new Date()).toString() + '] a user control. ');
-				AllPlayers.playerControl(socket, data);
-			});
-			
-			socket.on('resetSpeed', function() {
-				AllPlayers.playerResetSpeed(socket);
-			});
+
+
+            socket.on('control', function(data) {
+                //console.log('[' + (new Date()).toString() + '] a user control. ');
+                AllPlayers.playerControl(socket, data);
+            });
+
+            socket.on('resetSpeed', function() {
+                AllPlayers.playerResetSpeed(socket);
+            });
 
             socket.on('disconnect', function() {
                 console.log('[' + (new Date()).toString() + '] a user left. ');
@@ -161,26 +163,12 @@ var async = require('async');
                 var text = String(msg || '');
                 if (!text)
                     return;
-
                 console.log('message: ' + msg);
                 io.emit('message', msg);
             });
         });
 
-        function updateRoster() {
-            async.map(
-                sockets,
-                function(socket, callback) {
-                    socket.get('name', callback);
-                },
-                function(err, names) {
-                    broadcast('roster', names);
-                }
-            );
-        }
     };
-
-
 
     var fts = 16; // frame per second
     var gameTimer; // = setInterval(gameLoop, 1000/fts);

@@ -10,10 +10,10 @@ var util = require('util');
         bulletCrashRange: 2,
         flightImg: 'flight',
         bulletImg: 'bullet',
-		minFlightSpeed: 2,
-		maxFlightSpeed: 10,
-		speedAcceleration: 0.1,
-		angleAcceleration: 0.005
+        minFlightSpeed: 2,
+        maxFlightSpeed: 10,
+        speedAcceleration: 0.1,
+        angleAcceleration: 0.005
     };
 
     /*
@@ -75,7 +75,8 @@ var util = require('util');
             y: this.p.y,
             angle: this.v.angle,
             type: this.type,
-            name: this.name
+            name: this.name,
+            id: this.owner
         };
         return data;
     };
@@ -122,23 +123,23 @@ var util = require('util');
         this.owner = owner;
         this.img = CONST.flightImg;
         this.crashCheckRange = CONST.flightCrashRange;
-		
-		// flight controller
-		Flight.prototype.control = function(data) {
-			// speed controller
-			this.v.speed += (data.offset_speed * CONST.speedAcceleration);
-			if (this.v.speed > CONST.maxFlightSpeed) this.v.speed = CONST.maxFlightSpeed;
-			else if (this.v.speed < CONST.minFlightSpeed) this.v.speed = CONST.minFlightSpeed;
-			// angle controller
-			this.v.angle += (data.offset_angle * CONST.angleAcceleration);
-			if (this.v.angle > 2 * Math.PI) this.v.angle -= (2 * Math.PI);
-			else if (this.v.angle < 0) this.v.angle += (2 * Math.PI);
-		}
-		
-		// reset speed
-		Flight.prototype.resetSpeed = function() {
-			this.v.speed = CONST.flightSpeed;
-		}
+
+        // flight controller
+        Flight.prototype.control = function(data) {
+            // speed controller
+            this.v.speed += (data.offset_speed * CONST.speedAcceleration);
+            if (this.v.speed > CONST.maxFlightSpeed) this.v.speed = CONST.maxFlightSpeed;
+            else if (this.v.speed < CONST.minFlightSpeed) this.v.speed = CONST.minFlightSpeed;
+            // angle controller
+            this.v.angle += (data.offset_angle * CONST.angleAcceleration);
+            if (this.v.angle > 2 * Math.PI) this.v.angle -= (2 * Math.PI);
+            else if (this.v.angle < 0) this.v.angle += (2 * Math.PI);
+        }
+
+        // reset speed
+        Flight.prototype.resetSpeed = function() {
+            this.v.speed = CONST.flightSpeed;
+        }
     }
 
     //@override
@@ -173,10 +174,8 @@ var util = require('util');
         return f;
     };
 
-    module.exports.fire = function(flight) {
-    };
+    module.exports.fire = function(flight) {};
 
-    module.exports.newPlayer = function() {
-    };
+    module.exports.newPlayer = function() {};
 
 }());
