@@ -70,6 +70,14 @@ var async = require('async');
                 }
             }
 		},
+		playerControl: function(socket, data) {
+			for (var key in this.players) {
+                if (this.players[key] !== null && this.players[key].socket == socket) {
+					this.players[key].flight.control(data);
+                    break;
+                }
+            }
+		},
 
         queryPlayer: function(id) {
             return this.players[id.toString()];
@@ -127,6 +135,10 @@ var async = require('async');
 			socket.on('rotate-left', function() {
 				console.log('[' + (new Date()).toString() + '] a user rotate left. ');
 				AllPlayers.playerRotateLeft(socket);
+			});
+			
+			socket.on('control', function(data) {
+				AllPlayers.playerControl(socket, data);
 			});
 
             socket.on('disconnect', function() {

@@ -124,6 +124,15 @@ var util = require('util');
 			if (this.v.angle > 2 * Math.PI) this.v.angle -= (2 * Math.PI);
 			console.log(this.v.angle + ', ' + this.v.speed);
 		}
+		
+		Flight.prototype.control = function(data) {
+			this.v.speed += data.offset_speed;
+			if (this.v.speed > 10) this.v.speed = 10;
+			else if (this.v.speed < 2) this.v.speed = 2;
+			this.v.angle += data.offset_angle;
+			if (this.v.angle > 2 * Math.PI) this.v.angle -= (2 * Math.PI);
+			else if (this.v.angle < 0) this.v.angle += (2 * Math.PI);
+		}
     }
         //Flight.prototype.speedUp() {};
 
