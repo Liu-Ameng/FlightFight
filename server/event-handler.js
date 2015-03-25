@@ -7,6 +7,7 @@ var async = require('async');
         sendId: 'send-id',
         getKeyPress: 'get-key-press',
         sendPos: 'send-pos',
+        playerLeave:'player-leave',
 
         stageSize: 700,
         flightSpeed: 5,
@@ -54,10 +55,19 @@ var async = require('async');
         },
 
         playerLeft: function(socket) {
+            var id ;
             for (var key in this.players) {
                 if (this.players[key] !== null && this.players[key].socket == socket) {
+                    id = socket.id;
+                    console.log('leave name is '+id);
                     this.players[key] = null;
                     break;
+                }
+            }
+            for (var key in this.players) {
+                p = this.players[key];
+                if (p !== null) {
+                    p.socket.emit(CONST.playerLeave, id);
                 }
             }
         },

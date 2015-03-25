@@ -7,6 +7,7 @@ FF.View = function(data) {
     this.xOffset = 10;
     this.yOffset = 10;
     this.allFlyObjs = [];
+    this.allFlyNames = [];
 	this.id = '';
     createjs.Touch.enable(this.stage);
 };
@@ -16,6 +17,18 @@ FF.View.prototype.paint = function(res) {
     var flyObj;
     for (i = 0; i < res.length; ++i) {
         flyObj = this.updateFlyObj(res[i]);
+    }
+    this.stage.update();
+};
+FF.View.prototype.remove = function(res) {
+    for(var key in this.allFlyObjs)
+    {
+        if(this.allFlyObjs[key].name == res)
+        {
+            this.stage.removeChild(this.allFlyObjs[key]);
+            delete(this.allFlyObjs[key]);
+            break;
+        }
     }
     this.stage.update();
 };
@@ -37,29 +50,42 @@ FF.View.prototype.updateFlyObj = function(resObj) {
 
 FF.View.prototype.createFlyObj = function(resObj) {
     var self = this;
-    if(resObj.type === 'f') {
-        var img = new Image();
-		if (resObj.name === self.id) {
-			img.src = '../img/my-flight.png';
-		}
-		else {
-			img.src = '../img/flight.png';
-		}
-        img.onload = function() {
-            var f = new createjs.Bitmap(img);
-            f.x = resObj.x;
-            f.y = resObj.y;
-			f.rotation = resObj.angle * 180 / Math.PI;
-            f.scaleX = 0.25;
-            f.scaleY = 0.25;
-            f.alpha = 0.8;
-            f.name = resObj.name;
-            f.type = resObj.type;
-            self.stage.addChild(f);
-
-            self.allFlyObjs.push(f);
-        };
+    var flag = true;
+    if(self.allFlyNames[resObj.name] == undefined)
+    {
+        self.allFlyNames[resObj.name] = 1;
     }
+    else
+    {
+        flag = false;
+    }
+    if(flag)
+    {
+        if(resObj.type === 'f') {
+            var img = new Image();
+            if (resObj.name === self.playerId) {
+                img.src = '../img/my-flight.png';
+            }
+            else {
+                img.src = '../img/flight.png';
+            }
+            img.onload = function() {
+                var f = new createjs.Bitmap(img);
+                f.x = resObj.x;
+                f.y = resObj.y;
+                f.rotation = resObj.angle * 180 / Math.PI;
+                f.scaleX = 0.25;
+                f.scaleY = 0.25;
+                f.alpha = 0.8;
+                f.name = resObj.name;
+                f.type = resObj.type;
+                self.stage.addChild(f);
+
+                self.allFlyObjs.push(f);
+            };
+        }
+    }
+
 };
 
 FF.View.prototype.planeControl = function(x, y, socket) {
@@ -128,6 +154,10 @@ $(document).ready(function() {
     socket.on('send-pos', function(res) {
         //console.debug(res);
         view.paint(res);
+    });
+    socket.on('player-leave', function(res) {
+        //console.debug(res);
+        view.remove(res);
     });
 
 });
