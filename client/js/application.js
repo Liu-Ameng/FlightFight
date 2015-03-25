@@ -44,6 +44,10 @@ $(document).ready(function() {
         //console.debug(res);
         view.remove(res);
     });
+    socket.on('bullet-remove', function(res) {
+        //console.debug(res);
+        view.removeBullets(res);
+    });
 
     FF.controller = new FF.Controller();
 	var controller = FF.controller;
@@ -62,7 +66,7 @@ $(document).ready(function() {
     joystick.y = controller.joystickIniPos.y;
     controller.stage.addChild(joystick);
     controller.stage.update();
-	
+
 	joystick.on('pressmove', function(evt) {
 		controller.controlling = true;
 		evt.currentTarget.x = evt.stageX;
@@ -274,4 +278,9 @@ $(document).ready(function() {
 			}
 		}
 	};
+    var btnFire = document.getElementById('btn-fire');
+    btnFire.addEventListener('click',function()
+    {
+        socket.emit('fire');
+    })
 });

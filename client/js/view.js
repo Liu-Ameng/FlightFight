@@ -31,16 +31,41 @@ FF.View.prototype.remove = function(res) {
     }
     this.stage.update();
 };
+FF.View.prototype.removeBullets = function(res) {
+    for(var j=res.length-1;j>=0;j--)
+    {
+        for (var i = this.allFlyObjs.length - 1; i >= 0; --i) {
+            if (this.allFlyObjs[i].id === res[j].id && this.allFlyObjs[i].type === res[j].type  && this.allFlyObjs[i].order == res[j].order  ) {
+                this.stage.removeChild(this.allFlyObjs[i]);
+                this.allFlyObjs.splice(i, 1);
+            }
+        }
+    }
+
+    this.stage.update();
+};
 
 FF.View.prototype.updateFlyObj = function(resObj) {
-    var i, flyObj;
+    var i, flyObj,flag;
     for (i = 0; i < this.allFlyObjs.length; ++i) {
         flyObj = this.allFlyObjs[i];
-        if (flyObj.id === resObj.id && flyObj.type === resObj.type) {
-            flyObj.x = resObj.x;
-            flyObj.y = resObj.y;
-            flyObj.rotation = resObj.angle * 180 / Math.PI;
-            return flyObj;
+        if (flyObj.name === resObj.id && flyObj.type === resObj.type ) {
+            flag = true;
+            if(resObj.type == 'b')
+            {
+                if(resObj.order != flyObj.order)
+                {
+                   flag = false;
+                }
+            }
+            if(flag)
+            {
+                flyObj.x = resObj.x;
+                flyObj.y = resObj.y;
+                flyObj.rotation = resObj.angle * 180 / Math.PI;
+                return flyObj;
+            }
+
         }
     }
     return this.createFlyObj(resObj);
@@ -53,6 +78,25 @@ FF.View.prototype.createFlyObj = function(resObj) {
         self.allFlyNames[resObj.id] = 1;
     } else {
         flag = false;
+    }
+    if(resObj.type === 'b')
+    {
+        var img = new Image();
+        img.src = '../img/bullet.png';
+        img.onload = function() {
+            var f = new createjs.Bitmap(img);
+            f.x = resObj.x;
+            f.y = resObj.y;
+            f.rotation = resObj.angle * 180 / Math.PI;
+            f.scaleX = 1;
+            f.scaleY = 1;
+            f.alpha = 0.5;
+            f.name = resObj.name;
+            f.type = resObj.type;
+            f.order = resObj.order;
+            self.stage.addChild(f);
+            self.allFlyObjs.push(f);
+        };
     }
     if (flag) {
         if (resObj.type === 'f') {

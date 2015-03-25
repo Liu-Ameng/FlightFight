@@ -76,7 +76,8 @@ var util = require('util');
             angle: this.v.angle,
             type: this.type,
             name: this.name,
-            id: this.owner
+            id: this.owner,
+            order:this.order
         };
         return data;
     };
@@ -115,6 +116,7 @@ var util = require('util');
     function Flight(owner) {
         Flight.super_.call(this);
 
+        this.firedBulletNumbers = 0;
         this.type = 'f';
         this.name = owner;
         this.v.speed = CONST.flightSpeed;
@@ -140,13 +142,12 @@ var util = require('util');
         Flight.prototype.resetSpeed = function() {
             this.v.speed = CONST.flightSpeed;
         }
+        //@override
+        Flight.prototype.whenOutOfRange = function() {
+            this.p.set(CONST.stageSize - this.p.x, CONST.stageSize - this.p.y);
+            return false;
+        };
     }
-
-    //@override
-    FlyObj.prototype.whenOutOfRange = function() {
-        this.p.set((this.p.x + CONST.stageSize) % CONST.stageSize, (this.p.y + CONST.stageSize) % CONST.stageSize);
-        return false;
-    };
 
     util.inherits(Flight, FlyObj);
 
@@ -156,6 +157,8 @@ var util = require('util');
     function Bullet(flight) {
         Bullet.super_.call(this);
 
+        ++flight.firedBulletNumbers;
+        this.order = flight.firedBulletNumbers;
         this.v.speed = CONST.bulletSpeed;
         this.type = 'b';
         this.img = CONST.bulletImg;
@@ -167,14 +170,21 @@ var util = require('util');
             this.p.set(flight.p.x, flight.p.y);
         }
     }
-    util.inherits(Flight, FlyObj);
+    Bullet.prototype.whenOutOfRange = function() {
+        this.v.speed = 0;
+        return true;
+    };
+    util.inherits(Bullet, FlyObj);
 
     module.exports.createFlight = function(id) {
         var f = new Flight(id);
         return f;
     };
 
-    module.exports.fire = function(flight) {};
+    module.exports.fire = function(flight) {
+        var b = new Bullet(flight);
+        return b;
+    };
 
     module.exports.newPlayer = function() {};
 
