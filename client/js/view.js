@@ -35,7 +35,7 @@ FF.View.prototype.removeBullets = function(res) {
     for(var j=res.length-1;j>=0;j--)
     {
         for (var i = this.allFlyObjs.length - 1; i >= 0; --i) {
-            if (this.allFlyObjs[i].id === res[j].id && this.allFlyObjs[i].type === res[j].type  && this.allFlyObjs[i].order == res[j].order  ) {
+            if (this.allFlyObjs[i].name === res[j].id && this.allFlyObjs[i].type === res[j].type  && this.allFlyObjs[i].order == res[j].order  ) {
                 this.stage.removeChild(this.allFlyObjs[i]);
                 this.allFlyObjs.splice(i, 1);
             }

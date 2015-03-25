@@ -167,7 +167,7 @@ var util = require('util');
             this.name = flight.name;
             this.owner = flight.owner;
             this.v.angle = flight.v.angle;
-            this.p.set(flight.p.x, flight.p.y);
+            this.p.set(flight.p.x+36*Math.cos(flight.v.angle+0.467), flight.p.y+36*Math.sin(flight.v.angle+0.467));
         }
     }
     Bullet.prototype.whenOutOfRange = function() {

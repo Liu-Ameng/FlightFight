@@ -119,16 +119,20 @@ var async = require('async');
             var outArr = [];
             while (key--) {
                 if (this.flyings[key].move() === true ) {
-                    outArr.push(this.flyings[key]);
-                    this.flyings.slice(key,1);
+                    outArr.push(this.flyings[key].toJson());
+                    this.flyings.splice(key,1);
                 }
             }
-            for (key in this.players) {
-                p = this.players[key];
-                if (p !== null ) {
-                    p.socket.emit('bullet-remove',outArr);
+            if(outArr.length >0)
+            {
+                for (key in this.players) {
+                    p = this.players[key];
+                    if (p !== null ) {
+                        p.socket.emit('bullet-remove',outArr);
+                    }
                 }
             }
+
         },
 
         sendPos: function() {
@@ -147,7 +151,7 @@ var async = require('async');
             for (key = 0; key < this.flyings.length; ++key) {
                 res.push(this.flyings[key].toJson());
             }
-//            console.log('flying length is '+this.flyings.length);
+            console.log('flying length is '+this.flyings.length);
             for (key in this.players) {
                 p = this.players[key];
                 if (p !== null) {
