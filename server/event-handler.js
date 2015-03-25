@@ -134,6 +134,7 @@ var async = require('async');
             newPlayer.sendId();
 			
 			socket.on('control', function(data) {
+				console.log('[' + (new Date()).toString() + '] a user control. ');
 				AllPlayers.playerControl(socket, data);
 			});
 			

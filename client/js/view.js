@@ -18,6 +18,9 @@ FF.View.prototype.paint = function(res) {
         flyObj = this.updateFlyObj(res[i]);
     }
     this.stage.update();
+	if (parent.controller.controlling) {
+		parent.controller.planeControl();
+	}
 };
 
 FF.View.prototype.updateFlyObj = function(resObj) {
@@ -61,73 +64,3 @@ FF.View.prototype.createFlyObj = function(resObj) {
         };
     }
 };
-
-FF.View.prototype.planeControl = function(x, y, socket) {
-	var data = {
-		offset_speed: (40 - y),
-		offset_angle: (x - 40)
-	}
-	socket.emit('control', data);
-}
-
-FF.View.prototype.planeResetSpeed = function(socket) {
-	socket.emit('resetSpeed');
-}
-
-// Events
-$(document).ready(function() {
-    // initEveryThing();
-
-    var canvas = document.getElementById('game-canvas');
-
-    canvas.height = $(window).height() - 100;
-    if (canvas.height > FF.standardSize) {
-        canvas.height = FF.standardSize;
-    }
-    canvas.width = canvas.height;
-
-    var view = new FF.View({
-        width: canvas.width,
-        height: canvas.height,
-        stage: new createjs.Stage('game-canvas')
-    });
-	
-	circle = new createjs.Shape();
-    circle.graphics.beginFill("red").drawCircle(0, 0, 20);
-    //Set position of Shape instance.
-    circle.x = circle.y = 40;
-    //Add Shape instance to stage display list.
-    view.stage.addChild(circle);
-    //Update stage will render next frame
-    view.stage.update();
-	circle.x = circle.y = 80;
-	view.stage.update();
-
-    var socket = io();
-    console.log('Get connected!');
-	
-	circle.on("pressmove", function(evt) {
-    evt.target.x = evt.stageX;
-	if (evt.target.x > 60) evt.target.x = 60;
-	else if (evt.target.x < 20) evt.target.x = 20;
-    evt.target.y = evt.stageY;
-	if (evt.target.y > 60) evt.target.y = 60;
-	else if (evt.target.y < 20) evt.target.y = 20;
-	view.planeControl(evt.target.x, evt.target.y, socket);
-	});
-	circle.on("pressup", function(evt) { 
-		circle.x = circle.y = 40;
-		view.planeResetSpeed(socket);
-	});
-
-    socket.on('send-id', function(res) {
-        view.playerId = res;
-        //console.debug(FF.playerId);
-    });
-
-    socket.on('send-pos', function(res) {
-        //console.debug(res);
-        view.paint(res);
-    });
-
-});
