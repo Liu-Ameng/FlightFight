@@ -4,12 +4,16 @@ var util = require('util');
 
     var CONST = {
         stageSize: 700,
-        flightSpeed: 2,
-        bulletSpeed: 5,
+        flightSpeed: 5,
+        bulletSpeed: 20,
         flightCrashRange: 8,
         bulletCrashRange: 2,
         flightImg: 'flight',
         bulletImg: 'bullet',
+		minFlightSpeed: 2,
+		maxFlightSpeed: 10,
+		speedAcceleration: 0.1,
+		angleAcceleration: 0.005
     };
 
     /*
@@ -119,22 +123,23 @@ var util = require('util');
         this.img = CONST.flightImg;
         this.crashCheckRange = CONST.flightCrashRange;
 		
-		Flight.prototype.rotateLeft = function() {
-			this.v.angle += Math.PI / 30;
-			if (this.v.angle > 2 * Math.PI) this.v.angle -= (2 * Math.PI);
-			console.log(this.v.angle + ', ' + this.v.speed);
-		}
-		
+		// flight controller
 		Flight.prototype.control = function(data) {
-			this.v.speed += data.offset_speed;
-			if (this.v.speed > 10) this.v.speed = 10;
-			else if (this.v.speed < 2) this.v.speed = 2;
-			this.v.angle += data.offset_angle;
+			// speed controller
+			this.v.speed += (data.offset_speed * CONST.speedAcceleration);
+			if (this.v.speed > CONST.maxFlightSpeed) this.v.speed = CONST.maxFlightSpeed;
+			else if (this.v.speed < CONST.minFlightSpeed) this.v.speed = CONST.minFlightSpeed;
+			// angle controller
+			this.v.angle += (data.offset_angle * CONST.angleAcceleration);
 			if (this.v.angle > 2 * Math.PI) this.v.angle -= (2 * Math.PI);
 			else if (this.v.angle < 0) this.v.angle += (2 * Math.PI);
 		}
+		
+		// reset speed
+		Flight.prototype.resetSpeed = function() {
+			this.v.speed = CONST.flightSpeed;
+		}
     }
-        //Flight.prototype.speedUp() {};
 
     //@override
     FlyObj.prototype.whenOutOfRange = function() {

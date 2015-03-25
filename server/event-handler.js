@@ -9,8 +9,8 @@ var async = require('async');
         sendPos: 'send-pos',
 
         stageSize: 700,
-        flightSpeed: 2,
-        bulletSpeed: 5,
+        flightSpeed: 5,
+        bulletSpeed: 20,
         flightCrashRange: 8,
         bulletCrashRange: 2,
         flightImg: 'flight',
@@ -62,18 +62,19 @@ var async = require('async');
             }
         },
 		
-		playerRotateLeft: function(socket) {
-			for (var key in this.players) {
-                if (this.players[key] !== null && this.players[key].socket == socket) {
-					this.players[key].flight.rotateLeft();
-                    break;
-                }
-            }
-		},
 		playerControl: function(socket, data) {
 			for (var key in this.players) {
                 if (this.players[key] !== null && this.players[key].socket == socket) {
 					this.players[key].flight.control(data);
+                    break;
+                }
+            }
+		},
+		
+		playerResetSpeed: function(socket) {
+			for (var key in this.players) {
+                if (this.players[key] !== null && this.players[key].socket == socket) {
+					this.players[key].flight.resetSpeed();
                     break;
                 }
             }
@@ -132,13 +133,12 @@ var async = require('async');
             var newPlayer = AllPlayers.playerJoin(socket);
             newPlayer.sendId();
 			
-			socket.on('rotate-left', function() {
-				console.log('[' + (new Date()).toString() + '] a user rotate left. ');
-				AllPlayers.playerRotateLeft(socket);
-			});
-			
 			socket.on('control', function(data) {
 				AllPlayers.playerControl(socket, data);
+			});
+			
+			socket.on('resetSpeed', function() {
+				AllPlayers.playerResetSpeed(socket);
 			});
 
             socket.on('disconnect', function() {

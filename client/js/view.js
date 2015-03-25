@@ -62,12 +62,16 @@ FF.View.prototype.createFlyObj = function(resObj) {
     }
 };
 
-FF.View.prototype.planeRotate = function(x, y, socket) {
+FF.View.prototype.planeControl = function(x, y, socket) {
 	var data = {
-		offset_speed: (40 - y) / 10,
-		offset_angle: (x - 40) / 200
+		offset_speed: (40 - y),
+		offset_angle: (x - 40)
 	}
 	socket.emit('control', data);
+}
+
+FF.View.prototype.planeResetSpeed = function(socket) {
+	socket.emit('resetSpeed');
 }
 
 // Events
@@ -109,18 +113,12 @@ $(document).ready(function() {
     evt.target.y = evt.stageY;
 	if (evt.target.y > 60) evt.target.y = 60;
 	else if (evt.target.y < 20) evt.target.y = 20;
-	view.planeRotate(evt.target.x, evt.target.y, socket);
+	view.planeControl(evt.target.x, evt.target.y, socket);
 	});
 	circle.on("pressup", function(evt) { 
 		circle.x = circle.y = 40;
+		view.planeResetSpeed(socket);
 	});
-	
-	/*circle.addEventListener("mousedown", handlePress);
-	function handlePress(event){
-     // Click happenened
-	 console.log("press");
-	 socket.emit('rotate-left', 'rotate-left');
-	}*/
 
     socket.on('send-id', function(res) {
         view.playerId = res;
