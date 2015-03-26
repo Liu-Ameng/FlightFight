@@ -8,8 +8,10 @@ var io = require('socket.io')(server);
 
 app.use(express.static(path.resolve(__dirname, 'client')));
 
-server.listen(3000, function(){
-  console.log('listening on *:3000');
+process.env.PORT = process.env.PORT || 3000;
+process.env.IP = process.env.IP || "localhost";
+server.listen(process.env.PORT, function(){
+  console.log('listening on ' + process.env.IP + ':' + process.env.PORT);
 });
 
 
