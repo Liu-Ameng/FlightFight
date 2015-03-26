@@ -7,6 +7,10 @@ FF.View = function(data) {
     this.controller = null;
     this.xOffset = 10;
     this.yOffset = 10;
+	this.planeOffsetX = 64;
+	this.planeOffsetY = 64;
+	this.bulletOffsetX = 8;
+	this.bulletOffsetY = 4;
     this.allFlyObjs = [];
     this.allFlyNames = [];
 };
@@ -33,6 +37,26 @@ FF.View.prototype.remove = function(res) {
     }
     this.stage.update();
 };
+
+FF.View.prototype.kill = function(res) {
+    'use strict';
+    for (var i = this.allFlyObjs.length - 1; i >= 0; --i) {
+        if (this.allFlyObjs[i].id === res) {
+			if (this.allFlyObjs[i].type == 'f') {
+				createjs.Tween.get(this.allFlyObjs[i], {loop: false})
+					.to({alpha: 0, scaleX: 1, scaleY: 1},
+					1000, createjs.Ease.getPowInOut(4));
+				createjs.Ticker.setFPS(60);
+				createjs.Ticker.addEventListener('tick', controller.stage);
+			}
+            //因为子弹和其所属飞机的id是一样的，这一步就可以同时删除飞机和子弹
+            this.stage.removeChild(this.allFlyObjs[i]);
+            this.allFlyObjs.splice(i, 1);
+        }
+    }
+    this.stage.update();
+};
+
 FF.View.prototype.removeBullets = function(res) {
     'use strict';
     for(var j=res.length-1;j>=0;j--)
@@ -67,6 +91,14 @@ FF.View.prototype.updateFlyObj = function(resObj) {
                 flyObj.x = resObj.x;
                 flyObj.y = resObj.y;
                 flyObj.rotation = resObj.angle * 180 / Math.PI;
+				if (flyObj.type == 'b') {
+					flyObj.regX = this.bulletOffsetX;
+					flyObj.regY = this.bulletOffsetY;
+				}
+				else if (flyObj.type == 'f') {
+					flyObj.regX = this.planeOffsetX;
+					flyObj.regY = this.planeOffsetY;
+				}
                 return flyObj;
             }
 

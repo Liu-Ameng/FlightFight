@@ -44,6 +44,12 @@ $(document).ready(function() {
         //console.debug(res);
         view.remove(res);
     });
+	
+	socket.on('player-dead', function(res) {
+        //console.debug(res);
+        view.kill(res);
+    });
+	
     socket.on('bullet-remove', function(res) {
         //console.debug(res);
         view.removeBullets(res);

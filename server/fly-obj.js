@@ -4,15 +4,15 @@ var util = require('util');
 
     var CONST = {
         stageSize: 700,
-        flightSpeed: 5,
-        bulletSpeed: 20,
+        flightSpeed: 2,
+        bulletSpeed: 5,
         flightCrashRange: 8,
         bulletCrashRange: 2,
         flightImg: 'flight',
         bulletImg: 'bullet',
-        minFlightSpeed: 2,
-        maxFlightSpeed: 10,
-        speedAcceleration: 0.1,
+        minFlightSpeed: 1,
+        maxFlightSpeed: 3,
+        speedAcceleration: 0.05,
         angleAcceleration: 0.005
     };
 
@@ -84,7 +84,15 @@ var util = require('util');
 
     FlyObj.prototype.isCrash = function(other) {
         if (other instanceof FlyObj) {
-            return getDistanceSquar(this.p, other.p) < this.crashCheckRange + other.crashCheckRange;
+			/*var actualP1 = new Point();
+			actualP1.x = this.p.x + Math.cos(Math.PI / 4 - this.v.angle) * this.crashCheckRange; 
+			actualP1.y = this.p.y + Math.sin(Math.PI / 4 - this.v.angle) * this.crashCheckRange;
+			var actualP2 = new Point();
+			actualP2.x = other.p.x + Math.cos(Math.PI / 4 - other.v.angle) * other.crashCheckRange; 
+			actualP2.y = other.p.y + Math.sin(Math.PI / 4 - other.v.angle) * other.crashCheckRange;
+			//console.log('(' + actualP1.x + ',' + actualP1.y + '); (' + actualP2.x + ',' + actualP2.y + '); dist = ' + Math.sqrt(getDistanceSquar(actualP1, actualP2)));
+			return Math.sqrt(getDistanceSquar(actualP1, actualP2)) < this.crashCheckRange + other.crashCheckRange;*/
+            return Math.sqrt(getDistanceSquar(this.p, other.p)) < this.crashCheckRange + other.crashCheckRange;
         }
         return undefined;
     };
@@ -167,7 +175,8 @@ var util = require('util');
             this.name = flight.name;
             this.owner = flight.owner;
             this.v.angle = flight.v.angle;
-            this.p.set(flight.p.x+36*Math.cos(flight.v.angle+0.467), flight.p.y+36*Math.sin(flight.v.angle+0.467));
+            //this.p.set(flight.p.x+36*Math.cos(flight.v.angle+0.467), flight.p.y+36*Math.sin(flight.v.angle+0.467));
+			this.p.set(flight.p.x+20*Math.cos(flight.v.angle), flight.p.y+20*Math.sin(flight.v.angle));
         }
     }
 

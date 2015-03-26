@@ -16,7 +16,9 @@ var async = require('async');
         sendId: 'send-id',
         getKeyPress: 'get-key-press',
         sendPos: 'send-pos',
-        playerLeave: 'player-leave'
+        playerLeave: 'player-leave',
+		playerDead: 'player-dead',
+		enablePlaneCollision: false
     };
 
     var self = this;
@@ -113,15 +115,54 @@ var async = require('async');
                 p = this.players[key];
                 if (p !== null) {
                     p.flight.move();
+					if (CONST.enablePlaneCollision) {
+						for (var key2 in this.players) {
+							if (key == key2) continue;
+							p2 = this.players[key2];
+							if (p.flight.isCrash(p2.flight) === true) {
+								delete this.players[key];
+								for (var key3 in this.players) {
+									this.players[key3].socket.emit(CONST.playerDead, key);
+								}
+								console.log('[' + (new Date()).toString() + '] player [id =' + key + '] leave us.');
+								this.printNumberOfPlayer();
+								delete this.players[key2];
+								for (var key3 in this.players) {
+									this.players[key3].socket.emit(CONST.playerDead, key2);
+								}
+								console.log('[' + (new Date()).toString() + '] player [id =' + key2 + '] leave us.');
+								this.printNumberOfPlayer();
+							}
+						}
+					}
                 }
             }
             key = this.flyings.length;
             var outArr = [];
             while (key--) {
-                if (this.flyings[key].move() === true ) {
+                if (this.flyings[key].move() === true) {
                     outArr.push(this.flyings[key].toJson());
                     this.flyings.splice(key,1);
+					continue;
                 }
+				for (var key2 in this.players) {
+					p = this.players[key2];
+					if (p !== null) {
+						if (this.flyings[key] && this.flyings[key].isCrash(p.flight) === true) {
+							delete this.players[key2];
+							this.players[this.flyings[key].owner].score++;
+							console.log(this.flyings[key].owner + 'get 1 score, score = ' + this.players[this.flyings[key].owner].score);
+							for (var key3 in this.players) {
+								this.players[key3].socket.emit(CONST.playerDead, key2);
+							}
+							console.log('[' + (new Date()).toString() + '] player [id =' + key2 + '] leave us.');
+							this.printNumberOfPlayer();
+							outArr.push(this.flyings[key].toJson());
+							this.flyings.splice(key,1);
+							continue;
+						}
+					}
+				}
             }
             if(outArr.length >0)
             {
@@ -198,15 +239,17 @@ var async = require('async');
 
     };
 
-    var fts = 16; // frame per second
+    var fts = 60; // frame per second
     var gameTimer; // = setInterval(gameLoop, 1000/fts);
+	var sendFlg = 0;
 
     function gameLoop() {
         //one step movement
         AllPlayers.moveOneStep();
         //broadcast latest status
         //broadcast('message', new Date());
-        AllPlayers.sendPos();
+		if (sendFlg == 0) AllPlayers.sendPos();
+		sendFlg = (sendFlg + 1) & 3;
         //wait a moment and do again
 
     }

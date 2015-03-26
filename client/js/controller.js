@@ -77,20 +77,6 @@ FF.Controller.prototype.defineJoystick = function() {
             actualX = controller.joystickIniPos.x + dx / dist * controller.joystickRange.radius;
             actualY = controller.joystickIniPos.y + dy / dist * controller.joystickRange.radius;
         }
-        /*evt.currentTarget.x = evt.stageX;
-        if (evt.currentTarget.x > (controller.joystickIniPos.x + controller.joystickRange.x)) {
-            evt.currentTarget.x = (controller.joystickIniPos.x + controller.joystickRange.x);
-        }
-        else if (evt.currentTarget.x < (controller.joystickIniPos.x - controller.joystickRange.x)) {
-            evt.currentTarget.x = (controller.joystickIniPos.x - controller.joystickRange.x);
-        }
-        evt.currentTarget.y = evt.stageY;
-        if (evt.currentTarget.y > (controller.joystickIniPos.y + controller.joystickRange.y)) {
-            evt.currentTarget.y = (controller.joystickIniPos.y + controller.joystickRange.y);
-        }
-        else if (evt.currentTarget.y < (controller.joystickIniPos.y - controller.joystickRange.y)) {
-            evt.currentTarget.y = (controller.joystickIniPos.y - controller.joystickRange.y);
-        }*/
         evt.currentTarget.x = actualX;
         evt.currentTarget.y = actualY;
         controller.joystickCurPos.x = evt.currentTarget.x;
