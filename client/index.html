@@ -2,7 +2,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=0.4, maximum-scale=1, user-scalable=no">
 <meta name="description" content="">
 <meta name="author" content="">
 <link rel="icon" href="img/favicon.ico">
@@ -11,54 +11,28 @@
 <link
   href="http://cdn.bootcss.com/bootstrap/3.3.2/css/bootstrap.min.css"
   rel="stylesheet">
+<link href="css/ladda.min.css" rel="stylesheet">
 <link href="css/common.css" rel="stylesheet">
 </head>
 
 <body>
 
   <!-- Static navbar -->
-  <nav class="navbar navbar-default navbar-static-top">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed"
-          data-toggle="collapse" data-target="#navbar"
-          aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span> 
-          <span class="icon-bar"></span> 
-          <span class="icon-bar"></span> 
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#">Games on HTML5</a>
-      </div>
-      <div id="navbar" class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-          <li class="active"><a href="#">点右上角，分享给朋友</a></li>
-          <li><a href="https://github.com/Liu-Ameng/Idea01/issues">留言</a></li>
-          <li><a href="https://github.com/Liu-Ameng/Idea01">Source code</a></li>
-        </ul>
-      </div>
-      <!--/.nav-collapse -->
-    </div>
-  </nav>
 
   <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-2">
-        <div class="info">
-        </div>
+    <div class="panel-all">
+      <div class="panel-left">
         <div class="left-control">
           <canvas id="move-control-canvas" width="160" height="160">
           </canvas>
         </div>
       </div>
-      <div class="col-md-7">
-        <div class="canvas-container">
-          <canvas id="game-canvas" width="700" height="700">
-              您的浏览器不支持canvas！
-          </canvas>
-        </div>
+      <div class="panel-center">
+        <canvas id="game-canvas" width="700" height="700">
+            您的浏览器不支持canvas！
+        </canvas>
       </div>
-      <div class="col-md-3">
+      <div class="panel-right">
         <ul class="info">
             <li>Life</li>
             <li> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span></li>
@@ -69,8 +43,8 @@
             <li> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span></li>
         </ul>
         <div class="right-control">
-          <button id="btn-fire" type="button" class="btn btn-danger btn-xlg">Fire</button>
-          <button id="btn-fire" type="button" class="btn btn-danger btn-xlg">Block</button>
+          <button id="btn-fire" class="ladda-button" data-color="red" data-style="zoom-out">Fire!</button>
+          <button id="btn-fire" class="ladda-button" data-color="red" data-style="zoom-out">Shield</button>
         </div>
       </div>
     </div>
@@ -87,6 +61,8 @@
   <script src="js/libs/ember.js"></script>
   <script src="js/libs/ember-data.js"></script>
   -->
+  <script src="js/libs/spin.min.js"></script>
+  <script src="js/libs/ladda.min.js"></script>
   <script src="js/libs/socket.io-1.2.0.js"></script>
   <script src="js/application.js"></script>
   <script src="js/view.js"></script>

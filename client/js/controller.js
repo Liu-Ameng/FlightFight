@@ -16,8 +16,10 @@ FF.Controller = function() {
 		radius: 40
     };
     this.joystickRadius = 30;
-	this.joystickDiff = 2;
-	this.joystickAlpha = 0.4;
+    this.joystickDiff = 2;
+    this.joystickAlpha = 0.4;
+
+    this.defineRightSideButtons();
 };
 
 FF.Controller.prototype.planeControl = function() {
@@ -38,4 +40,20 @@ FF.Controller.prototype.speedUp = function() {
         offset_angle: 0
     }
     FF.socket.emit('control', data);
+}
+
+FF.Controller.prototype.defineRightSideButtons = function() {
+    Ladda.bind('.right-control button', {
+        callback: function(instance) {
+            var progress = 0;
+            var interval = setInterval(function() {
+                progress = Math.min(progress + 0.1, 1);
+                instance.setProgress(progress);
+                if (progress === 1) {
+                    instance.stop();
+                    clearInterval(interval);
+                }
+            }, 200);
+        }
+    });
 }
