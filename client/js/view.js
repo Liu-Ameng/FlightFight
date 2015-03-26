@@ -1,4 +1,5 @@
 FF.View = function(data) {
+    'use strict';
     var self = this;
     var minLength = Math.min(data.width, data.height);
     this.scale = data.width / FF.standardSize;
@@ -8,10 +9,10 @@ FF.View = function(data) {
     this.yOffset = 10;
     this.allFlyObjs = [];
     this.allFlyNames = [];
-    createjs.Touch.enable(this.stage);
 };
 
 FF.View.prototype.paint = function(res) {
+    'use strict';
     for (var i = 0; i < res.length; ++i) {
         this.updateFlyObj(res[i]);
     }
@@ -22,6 +23,7 @@ FF.View.prototype.paint = function(res) {
 };
 
 FF.View.prototype.remove = function(res) {
+    'use strict';
     for (var i = this.allFlyObjs.length - 1; i >= 0; --i) {
         if (this.allFlyObjs[i].id === res) {
             //因为子弹和其所属飞机的id是一样的，这一步就可以同时删除飞机和子弹
@@ -32,6 +34,7 @@ FF.View.prototype.remove = function(res) {
     this.stage.update();
 };
 FF.View.prototype.removeBullets = function(res) {
+    'use strict';
     for(var j=res.length-1;j>=0;j--)
     {
         for (var i = this.allFlyObjs.length - 1; i >= 0; --i) {
@@ -46,6 +49,7 @@ FF.View.prototype.removeBullets = function(res) {
 };
 
 FF.View.prototype.updateFlyObj = function(resObj) {
+    'use strict';
     var i, flyObj,flag;
     for (i = 0; i < this.allFlyObjs.length; ++i) {
         flyObj = this.allFlyObjs[i];
@@ -72,6 +76,7 @@ FF.View.prototype.updateFlyObj = function(resObj) {
 };
 
 FF.View.prototype.createFlyObj = function(resObj) {
+    'use strict';
     var self = this;
     var flag = true;
     if (self.allFlyNames[resObj.id] === undefined) {

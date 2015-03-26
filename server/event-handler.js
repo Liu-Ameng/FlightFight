@@ -151,7 +151,7 @@ var async = require('async');
             for (key = 0; key < this.flyings.length; ++key) {
                 res.push(this.flyings[key].toJson());
             }
-            console.log('flying length is '+this.flyings.length);
+            //console.log('flying length is '+this.flyings.length);
             for (key in this.players) {
                 p = this.players[key];
                 if (p !== null) {

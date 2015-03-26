@@ -80,9 +80,9 @@ ul {
 }
 
 .right-control button:active{
-    -webkit-box-shadow: 0px 2px 0px #797979;
-    -moz-box-shadow: 0px 2px 0px #797979;
-    box-shadow: 0px 2px 0px #797979;
-    position:relative;
-    top:7px;
+  -webkit-box-shadow: 0px 2px 0px #797979;
+  -moz-box-shadow: 0px 2px 0px #797979;
+  box-shadow: 0px 2px 0px #797979;
+  position:relative;
+  top:7px;
 }

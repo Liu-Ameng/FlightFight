@@ -170,6 +170,7 @@ var util = require('util');
             this.p.set(flight.p.x+36*Math.cos(flight.v.angle+0.467), flight.p.y+36*Math.sin(flight.v.angle+0.467));
         }
     }
+
     Bullet.prototype.whenOutOfRange = function() {
         this.v.speed = 0;
         return true;
