@@ -1,0 +1,99 @@
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=0.4, maximum-scale=1, user-scalable=no">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="img/favicon.ico">
+
+<title>Games on HTML5 - Flight Fight</title>
+<link
+  href="http://cdn.bootcss.com/bootstrap/3.3.2/css/bootstrap.min.css"
+  rel="stylesheet">
+<link href="css/ladda.min.css" rel="stylesheet">
+<link href="css/common.css" rel="stylesheet">
+<link href="css/overlay.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- Static navbar -->
+
+  <div class="container-fluid">
+    <div class="panel-all">
+      <div class="panel-left">
+        <div id="left-message" class="info">
+          <div class="alert alert-success" role="alert">...</div>
+        </div>
+        <div class="left-control">
+          <canvas id="move-control-canvas" width="160" height="160">
+          </canvas>
+        </div>
+      </div>
+      <div class="panel-center">
+        <canvas id="game-canvas" width="700" height="700">
+            您的浏览器不支持canvas！
+        </canvas>
+      </div>
+      <div class="panel-right">
+        <ul class="info">
+            <li>Shoot down</li>
+            <li id="shoot-down-list"></li>
+        </ul>
+        <div class="right-control">
+          <button id="btn-fire" class="ladda-button" data-color="red" data-style="zoom-out">Fire!</button>
+          <button id="btn-block" class="ladda-button" data-color="red" data-style="zoom-out">Shield</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /container -->
+
+  <a id="btn-gameover" href class="overlay-trigger" data-overlay="overlay-hello">Open Overlay</a>
+
+  <div id="overlay-hello" class="overlay">
+    <div class="overlay-inner">
+        <h3>虽败犹荣！</h3>
+        <h4>During this game, you killed</h4>
+        <p id="kill-list">   <p>
+        <h4>And finally you are killed by</h4>
+        <p id="killed-by">   <p>
+        <div class="btn-group" role="group" aria-label="...">
+          <button id="btn-play-again" type="button" class="btn btn-default">Try again!</button>
+          <button id="btn-exit" type="button" class="btn btn-default">不玩啦</button>
+          <div class="btn-group" role="group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+              Share
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#">Sina weibo</a></li>
+              <li><a href="#">Email</a></li>
+            </ul>
+          </div>
+        </div>
+    </div>
+  </div>
+
+
+  <script src="js/libs/jquery-1.11.2.min.js"></script>
+  <script
+    src="http://cdn.bootcss.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <script src="https://code.createjs.com/createjs-2014.12.12.min.js"></script>
+  <!--
+  <script src="js/libs/handlebars-v1.3.0.js"></script>
+  <script src="js/libs/ember.js"></script>
+  <script src="js/libs/ember-data.js"></script>
+  -->
+  <script src="js/libs/spin.min.js"></script>
+  <script src="js/libs/ladda.min.js"></script>
+  <script src="js/libs/socket.io-1.2.0.js"></script>
+  <script src="js/application.js"></script>
+  <script src="js/view.js"></script>
+  <script src="js/controller.js"></script>
+  <script src="js/message.js"></script>
+  <script src="js/game-ending.js"></script>
+
+</body>
+</html>

@@ -1,72 +1,51 @@
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=0.4, maximum-scale=1, user-scalable=no">
-<meta name="description" content="">
-<meta name="author" content="">
-<link rel="icon" href="img/favicon.ico">
+  <title>Welcome to Flight Fight! </title>
+    <meta charset="utf-8">
+    <link href="css/login.css" rel='stylesheet' type='text/css' />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="js/libs/jquery-1.11.2.min.js"></script>
+    <script type="application/x-javascript"> 
+        addEventListener("load", function() {
+            var name = localStorage.getItem('playerName');
+            if(name) {
+              $('#user-name').val(name);
+            }
+            setTimeout(hideURLbar, 0);
+            $('#login-btn').on('click', function() {
+                localStorage.setItem('playerName', $('#user-name').val());
+            });
+        }, false); 
 
-<title>Games on HTML5 - Flight Fight</title>
-<link
-  href="http://cdn.bootcss.com/bootstrap/3.3.2/css/bootstrap.min.css"
-  rel="stylesheet">
-<link href="css/ladda.min.css" rel="stylesheet">
-<link href="css/common.css" rel="stylesheet">
+        function hideURLbar(){
+            window.scrollTo(0,1); 
+        }
+      
+    </script>
+    <!--webfonts-->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:600italic,400,300,600,700' rel='stylesheet' type='text/css'>
+    <!--//webfonts-->
 </head>
-
 <body>
-
-  <!-- Static navbar -->
-
-  <div class="container-fluid">
-    <div class="panel-all">
-      <div class="panel-left">
-        <div class="left-control">
-          <canvas id="move-control-canvas" width="160" height="160">
-          </canvas>
+   <!-- start-main -->
+   <div class="main">
+    <div class="login-form">
+      <h1>Member Login</h1>
+      <div class="head">
+        <img src="img/user.png" alt=""/>
+      </div>
+      <form action="game.html">
+        <input id="user-name" type="text" class="text" value="USERNAME" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'USERNAME';}" >
+        <div class="submit">
+          <input id="login-btn" type="submit" value="LOGIN" >
         </div>
-      </div>
-      <div class="panel-center">
-        <canvas id="game-canvas" width="700" height="700">
-            您的浏览器不支持canvas！
-        </canvas>
-      </div>
-      <div class="panel-right">
-        <ul class="info">
-            <li>Life</li>
-            <li> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span></li>
-            <li> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> <span class="glyphicon glyphicon-heart" aria-hidden="true"></span></li>
-            <li></li>
-            <li>Shoot down</li>
-            <li> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span></li>
-            <li> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> <span class="glyphicon glyphicon-fire" aria-hidden="true"></span></li>
-        </ul>
-        <div class="right-control">
-          <button id="btn-fire" class="ladda-button" data-color="red" data-style="zoom-out">Fire!</button>
-          <button id="btn-block" class="ladda-button" data-color="red" data-style="zoom-out">Shield</button>
-        </div>
-      </div>
+      </form>
+    </div>
+    <div class="copy-right">
+      <p><a href="https://github.com/Liu-Ameng/FlightFight" target="_blank">More about me</a></p> 
     </div>
   </div>
-  <!-- /container -->
-
-
-  <script src="js/libs/jquery-1.11.2.min.js"></script>
-  <script
-    src="http://cdn.bootcss.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-  <script src="https://code.createjs.com/createjs-2014.12.12.min.js"></script>
-  <!--
-  <script src="js/libs/handlebars-v1.3.0.js"></script>
-  <script src="js/libs/ember.js"></script>
-  <script src="js/libs/ember-data.js"></script>
-  -->
-  <script src="js/libs/spin.min.js"></script>
-  <script src="js/libs/ladda.min.js"></script>
-  <script src="js/libs/socket.io-1.2.0.js"></script>
-  <script src="js/application.js"></script>
-  <script src="js/view.js"></script>
-  <script src="js/controller.js"></script>
 
 </body>
 </html>

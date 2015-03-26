@@ -8,10 +8,10 @@ body {
   line-height: 1.4em;
   margin: 0 auto;
   -webkit-font-smoothing: antialiased;
-  -moz-font-smoothing: antialiased;
-  -ms-font-smoothing: antialiased;
-  -o-font-smoothing: antialiased;
-  font-smoothing: antialiased;
+     -moz-font-smoothing: antialiased;
+      -ms-font-smoothing: antialiased;
+       -o-font-smoothing: antialiased;
+          font-smoothing: antialiased;
 }
 
 .navbar-static-top {
@@ -29,7 +29,7 @@ body {
 
 .panel-left {
   display: inline-block;
-  width: 160px;
+  width: 200px;
 }
 
 .panel-right {
@@ -65,6 +65,11 @@ ul {
   font-size: 150%;
 }
 
+#left-message .alert {
+  padding: 0.5em 1em;
+  margin: 2px;
+}
+
 .right-control button {
   position:relative;
   margin-bottom: 1em;
@@ -75,14 +80,14 @@ ul {
   -moz-transition: all 0.1s;
   transition: all 0.1s;
   -webkit-box-shadow: 0px 9px 0px #797979;
-        -moz-box-shadow: 0px 9px 0px #797979;
-        box-shadow: 0px 9px 0px #797979;
+     -moz-box-shadow: 0px 9px 0px #797979;
+          box-shadow: 0px 9px 0px #797979;
 }
 
 .right-control button:active{
   -webkit-box-shadow: 0px 2px 0px #797979;
-  -moz-box-shadow: 0px 2px 0px #797979;
-  box-shadow: 0px 2px 0px #797979;
+     -moz-box-shadow: 0px 2px 0px #797979;
+          box-shadow: 0px 2px 0px #797979;
   position:relative;
   top:7px;
 }

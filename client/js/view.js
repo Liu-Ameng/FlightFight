@@ -29,7 +29,7 @@ FF.View.prototype.paint = function(res) {
 FF.View.prototype.remove = function(res) {
     'use strict';
     for (var i = this.allFlyObjs.length - 1; i >= 0; --i) {
-        if (this.allFlyObjs[i].id === res) {
+        if (this.allFlyObjs[i].id === res.id) {
             //因为子弹和其所属飞机的id是一样的，这一步就可以同时删除飞机和子弹
             this.stage.removeChild(this.allFlyObjs[i]);
             this.allFlyObjs.splice(i, 1);
@@ -40,21 +40,36 @@ FF.View.prototype.remove = function(res) {
 
 FF.View.prototype.kill = function(res) {
     'use strict';
+    var id = res.killed.id;
+
     for (var i = this.allFlyObjs.length - 1; i >= 0; --i) {
-        if (this.allFlyObjs[i].id === res) {
+        if (this.allFlyObjs[i].id === res.killed.id) {
 			if (this.allFlyObjs[i].type == 'f') {
 				createjs.Tween.get(this.allFlyObjs[i], {loop: false})
 					.to({alpha: 0, scaleX: 1, scaleY: 1},
 					1000, createjs.Ease.getPowInOut(4));
 				createjs.Ticker.setFPS(60);
-				createjs.Ticker.addEventListener('tick', controller.stage);
+				createjs.Ticker.addEventListener('tick', this.stage);
 			}
             //因为子弹和其所属飞机的id是一样的，这一步就可以同时删除飞机和子弹
             this.stage.removeChild(this.allFlyObjs[i]);
             this.allFlyObjs.splice(i, 1);
         }
     }
+    if(res.killer.id === FF.playerId) {
+        FF.killList.push(res.killed.name);
+        $('#shoot-down-list').append('<span class="glyphicon glyphicon-fire" aria-hidden="true"></span>');
+    }else if(res.killed.id === FF.playerId) {
+        FF.killedBy = res.killer.name;
+        this.showGameEnding();
+    }
     this.stage.update();
+};
+
+FF.View.prototype.showGameEnding = function() {
+    $('#kill-list').text(FF.killList.toString());
+    $('#killed-by').text(FF.killedBy);
+    $('#btn-gameover').click();
 };
 
 FF.View.prototype.removeBullets = function(res) {
@@ -62,7 +77,7 @@ FF.View.prototype.removeBullets = function(res) {
     for(var j=res.length-1;j>=0;j--)
     {
         for (var i = this.allFlyObjs.length - 1; i >= 0; --i) {
-            if (this.allFlyObjs[i].name === res[j].id && this.allFlyObjs[i].type === res[j].type  && this.allFlyObjs[i].order == res[j].order  ) {
+            if (this.allFlyObjs[i].id === res[j].id && this.allFlyObjs[i].type === res[j].type  && this.allFlyObjs[i].order == res[j].order  ) {
                 this.stage.removeChild(this.allFlyObjs[i]);
                 this.allFlyObjs.splice(i, 1);
             }
@@ -77,7 +92,7 @@ FF.View.prototype.updateFlyObj = function(resObj) {
     var i, flyObj,flag;
     for (i = 0; i < this.allFlyObjs.length; ++i) {
         flyObj = this.allFlyObjs[i];
-        if (flyObj.name === resObj.id && flyObj.type === resObj.type ) {
+        if (flyObj.id === resObj.id && flyObj.type === resObj.type ) {
             flag = true;
             if(resObj.type == 'b')
             {
@@ -111,6 +126,7 @@ FF.View.prototype.createFlyObj = function(resObj) {
     'use strict';
     var self = this;
     var flag = true;
+    var img, f;
     if (self.allFlyNames[resObj.id] === undefined) {
         self.allFlyNames[resObj.id] = 1;
     } else {
@@ -118,10 +134,10 @@ FF.View.prototype.createFlyObj = function(resObj) {
     }
     if(resObj.type === 'b')
     {
-        var img = new Image();
+        img = new Image();
         img.src = '../img/bullet.png';
         img.onload = function() {
-            var f = new createjs.Bitmap(img);
+            f = new createjs.Bitmap(img);
             f.x = resObj.x;
             f.y = resObj.y;
             f.rotation = resObj.angle * 180 / Math.PI;
@@ -129,6 +145,7 @@ FF.View.prototype.createFlyObj = function(resObj) {
             f.scaleY = 1;
             f.alpha = 0.5;
             f.name = resObj.name;
+            f.id = resObj.id;
             f.type = resObj.type;
             f.order = resObj.order;
             self.stage.addChild(f);
@@ -137,14 +154,15 @@ FF.View.prototype.createFlyObj = function(resObj) {
     }
     if (flag) {
         if (resObj.type === 'f') {
-            var img = new Image();
+            img = new Image();
             if (resObj.id === FF.playerId) {
                 img.src = '../img/my-flight.png';
             } else {
                 img.src = '../img/flight.png';
+                FF.message.append(resObj.name + ' joins the game!', 'success');
             }
             img.onload = function() {
-                var f = new createjs.Bitmap(img);
+                f = new createjs.Bitmap(img);
                 f.x = resObj.x;
                 f.y = resObj.y;
                 f.rotation = resObj.angle * 180 / Math.PI;

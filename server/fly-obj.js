@@ -121,12 +121,12 @@ var util = require('util');
     /*
      * class Flight extends FlyObj
      */
-    function Flight(owner) {
+    function Flight(owner, name) {
         Flight.super_.call(this);
 
         this.firedBulletNumbers = 0;
         this.type = 'f';
-        this.name = owner;
+        this.name = name;
         this.v.speed = CONST.flightSpeed;
         this.v.angle = Math.random() * 2 * Math.PI;
         this.p.set(CONST.stageSize * Math.random(), CONST.stageSize * Math.random());
@@ -144,12 +144,12 @@ var util = require('util');
             this.v.angle += (data.offset_angle * CONST.angleAcceleration);
             if (this.v.angle > 2 * Math.PI) this.v.angle -= (2 * Math.PI);
             else if (this.v.angle < 0) this.v.angle += (2 * Math.PI);
-        }
+        };
 
         // reset speed
         Flight.prototype.resetSpeed = function() {
             this.v.speed = CONST.flightSpeed;
-        }
+        };
         //@override
         Flight.prototype.whenOutOfRange = function() {
             this.p.set(CONST.stageSize - this.p.x, CONST.stageSize - this.p.y);
@@ -186,8 +186,8 @@ var util = require('util');
     };
     util.inherits(Bullet, FlyObj);
 
-    module.exports.createFlight = function(id) {
-        var f = new Flight(id);
+    module.exports.createFlight = function(id, name) {
+        var f = new Flight(id, name);
         return f;
     };
 
@@ -195,7 +195,5 @@ var util = require('util');
         var b = new Bullet(flight);
         return b;
     };
-
-    module.exports.newPlayer = function() {};
 
 }());

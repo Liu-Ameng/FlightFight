@@ -17,8 +17,8 @@ var async = require('async');
         getKeyPress: 'get-key-press',
         sendPos: 'send-pos',
         playerLeave: 'player-leave',
-		playerDead: 'player-dead',
-		enablePlaneCollision: false
+        playerDead: 'player-dead',
+        enablePlaneCollision: false
     };
 
     var self = this;
@@ -33,12 +33,19 @@ var async = require('async');
         this.id = socket.id;
         this.name = name;
         this.socket = socket;
-        this.flight = flyObj.createFlight(this.id);
+        this.flight = flyObj.createFlight(this.id, name);
         this.score = 0;
     }
 
     Player.prototype.sendId = function() {
         this.socket.emit(CONST.sendId, this.id);
+    };
+
+    Player.prototype.toJson = function() {
+        return {
+            id: this.id,
+            name: this.name
+        };
     };
 
     /*
@@ -54,8 +61,8 @@ var async = require('async');
             console.log('[' + (new Date()).toString() + '] Online plyar: ' + Object.size(this.players));
         },
 
-        playerJoin: function(socket) {
-            var newPlayer = new Player("anonymity", socket);
+        playerJoin: function(socket, name) {
+            var newPlayer = new Player(name, socket);
             this.players[socket.id] = newPlayer;
 
             console.log('[' + (new Date()).toString() + '] a user connected. ');
@@ -64,13 +71,12 @@ var async = require('async');
         },
 
         playerLeft: function(socket) {
-            if (this.players[socket.id]) {
-                delete this.players[socket.id];
-
+            var player = this.players[socket.id];
+            if (player) {
                 for (var key in this.players) {
-                    this.players[key].socket.emit(CONST.playerLeave, socket.id);
+                    this.players[key].socket.emit(CONST.playerLeave, player.toJson());
                 }
-
+                delete this.players[socket.id];
                 console.log('[' + (new Date()).toString() + '] player [id =' + socket.id + '] leave us.');
                 this.printNumberOfPlayer();
             }
@@ -110,31 +116,31 @@ var async = require('async');
         },
 
         moveOneStep: function() {
-            var key, p;
+            var key, key2, key3, p;
             for (key in this.players) {
                 p = this.players[key];
                 if (p !== null) {
                     p.flight.move();
-					if (CONST.enablePlaneCollision) {
-						for (var key2 in this.players) {
-							if (key == key2) continue;
-							p2 = this.players[key2];
-							if (p.flight.isCrash(p2.flight) === true) {
-								delete this.players[key];
-								for (var key3 in this.players) {
-									this.players[key3].socket.emit(CONST.playerDead, key);
-								}
-								console.log('[' + (new Date()).toString() + '] player [id =' + key + '] leave us.');
-								this.printNumberOfPlayer();
-								delete this.players[key2];
-								for (var key3 in this.players) {
-									this.players[key3].socket.emit(CONST.playerDead, key2);
-								}
-								console.log('[' + (new Date()).toString() + '] player [id =' + key2 + '] leave us.');
-								this.printNumberOfPlayer();
-							}
-						}
-					}
+                    if (CONST.enablePlaneCollision) {
+                        for (key2 in this.players) {
+                            if (key == key2) continue;
+                            p2 = this.players[key2];
+                            if (p.flight.isCrash(p2.flight) === true) {
+                                delete this.players[key];
+                                for (key3 in this.players) {
+                                    this.players[key3].socket.emit(CONST.playerDead, key);
+                                }
+                                console.log('[' + (new Date()).toString() + '] player [id =' + key + '] leave us.');
+                                this.printNumberOfPlayer();
+                                delete this.players[key2];
+                                for (key3 in this.players) {
+                                    this.players[key3].socket.emit(CONST.playerDead, key2);
+                                }
+                                console.log('[' + (new Date()).toString() + '] player [id =' + key2 + '] leave us.');
+                                this.printNumberOfPlayer();
+                            }
+                        }
+                    }
                 }
             }
             key = this.flyings.length;
@@ -143,26 +149,29 @@ var async = require('async');
                 if (this.flyings[key].move() === true) {
                     outArr.push(this.flyings[key].toJson());
                     this.flyings.splice(key,1);
-					continue;
+                    continue;
                 }
-				for (var key2 in this.players) {
-					p = this.players[key2];
-					if (p !== null) {
-						if (this.flyings[key] && this.flyings[key].isCrash(p.flight) === true) {
-							delete this.players[key2];
-							this.players[this.flyings[key].owner].score++;
-							console.log(this.flyings[key].owner + 'get 1 score, score = ' + this.players[this.flyings[key].owner].score);
-							for (var key3 in this.players) {
-								this.players[key3].socket.emit(CONST.playerDead, key2);
-							}
-							console.log('[' + (new Date()).toString() + '] player [id =' + key2 + '] leave us.');
-							this.printNumberOfPlayer();
-							outArr.push(this.flyings[key].toJson());
-							this.flyings.splice(key,1);
-							continue;
-						}
-					}
-				}
+                for (key2 in this.players) {
+                    p = this.players[key2];
+                    if (p !== null) {
+                        if (this.flyings[key] && this.flyings[key].isCrash(p.flight) === true) {
+                            for (key3 in this.players) {
+                                this.players[key3].socket.emit(CONST.playerDead, {
+                                    killer: this.players[this.flyings[key].owner].toJson(),
+                                    killed: this.players[key2].toJson()
+                                });
+                            }
+                            delete this.players[key2];
+                            this.players[this.flyings[key].owner].score++;
+                            console.log(this.flyings[key].owner + 'get 1 score, score = ' + this.players[this.flyings[key].owner].score);
+                            console.log('[' + (new Date()).toString() + '] player [id =' + key2 + '] leave us.');
+                            this.printNumberOfPlayer();
+                            outArr.push(this.flyings[key].toJson());
+                            this.flyings.splice(key,1);
+                            continue;
+                        }
+                    }
+                }
             }
             if(outArr.length >0)
             {
@@ -206,9 +215,10 @@ var async = require('async');
         this.io = io;
         io.on('connection', function(socket) {
 
-            var newPlayer = AllPlayers.playerJoin(socket);
-            newPlayer.sendId();
-
+            socket.on('player-join', function(name) {
+                var newPlayer = AllPlayers.playerJoin(socket, name);
+                newPlayer.sendId();
+            });
 
             socket.on('control', function(data) {
                 //console.log('[' + (new Date()).toString() + '] a user control. ');
@@ -241,15 +251,17 @@ var async = require('async');
 
     var fts = 60; // frame per second
     var gameTimer; // = setInterval(gameLoop, 1000/fts);
-	var sendFlg = 0;
+    var sendFlg = 0;
 
     function gameLoop() {
         //one step movement
         AllPlayers.moveOneStep();
         //broadcast latest status
         //broadcast('message', new Date());
-		if (sendFlg == 0) AllPlayers.sendPos();
-		sendFlg = (sendFlg + 1) & 3;
+        if (sendFlg === 0) {
+            AllPlayers.sendPos();
+        }
+        sendFlg = (sendFlg + 1) & 3;
         //wait a moment and do again
 
     }

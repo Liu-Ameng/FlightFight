@@ -5,7 +5,9 @@ window.FF = {
     view: {},
     standardSize: 700,
     socket: null,
-    playerId: ''
+    playerId: '',
+    killList: [],
+    killedBy: ''
 };
 
 // Events
@@ -19,20 +21,27 @@ $(document).ready(function() {
     }
     canvas.width = canvas.height;
 
+    FF.socket = io();
+    var socket = FF.socket;
+
+    FF.message = new FF.MessageController();
+
     FF.view = new FF.View({
         width: canvas.width,
         height: canvas.height,
         stage: new createjs.Stage('game-canvas')
-    });
+    });   
     var view = FF.view;
 
-    FF.socket = io();
-    var socket = FF.socket;
     console.log('Get connected!');
+
+    FF.controller = new FF.Controller();
+
+    socket.emit('player-join', localStorage.getItem('playerName'));
 
     socket.on('send-id', function(res) {
         FF.playerId = res;
-        console.log("my id = " + FF.playerId);
+        FF.message.append('You join the game!', 'success');
     });
 
     socket.on('send-pos', function(res) {
@@ -41,12 +50,12 @@ $(document).ready(function() {
     });
 
     socket.on('player-leave', function(res) {
-        //console.debug(res);
+        FF.message.append(res.name + ' left game...', 'warning');
         view.remove(res);
     });
 	
 	socket.on('player-dead', function(res) {
-        //console.debug(res);
+        FF.message.append(res.killer.name + ' killed ' + res.killed.name + '!!', 'danger');
         view.kill(res);
     });
 	
@@ -54,7 +63,5 @@ $(document).ready(function() {
         //console.debug(res);
         view.removeBullets(res);
     });
-
-    FF.controller = new FF.Controller();
 
 });

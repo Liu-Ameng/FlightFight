@@ -119,6 +119,15 @@ FF.Controller.prototype.defineRightSideButtons = function() {
     $('#btn-fire').on('click',function() {
         FF.socket.emit('fire');
     });
+
+    $('#btn-play-again').on('click',function() {
+        window.location.href = 'index.html';
+    });
+
+    $('#btn-exit').on('click',function() {
+        window.close();
+        open(location, '_self').close();
+    });
 };
 
 FF.Controller.prototype.defineKeyEvent = function() {

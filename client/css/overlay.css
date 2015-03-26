@@ -1,0 +1,53 @@
+.overlay {
+  overflow: scroll;
+  position: fixed;
+  top: 0;
+  bottom: 110%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 10000;
+  opacity: 0;
+  background: #4d4d4d;
+  transition: opacity 200ms linear, bottom 0s linear 200ms;
+}
+.overlay-open {
+  bottom: 0;
+  opacity: 1;
+  transition: opacity 200ms linear, bottom 0s linear;
+}
+.overlay-view {
+  overflow: hidden;
+}
+.overlay-form .overlay-inner {
+  background: #fff;
+  margin: 5rem auto;
+  padding: 4rem;
+  max-width: 700px;
+}
+.admin-bar .overlay {
+  top: 32px;
+}
+
+.overlay-trigger {
+  display: none; /*block*/
+  max-width: 14rem;
+  margin: 6.25rem auto;
+  padding: 2rem;
+  background: #f0787c;
+  border-radius: 2px;
+  color: #fff;
+  font-size: 1.5rem;
+  text-align: center;
+  text-decoration: none;
+  transition: all 200ms linear;
+}
+.overlay-trigger:hover {
+  background: #ec585d;
+}
+.overlay-inner {
+  max-width: 40rem;
+  margin: 5rem auto;
+  padding: 2rem;
+  background: #fff;
+}
