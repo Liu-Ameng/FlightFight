@@ -54,7 +54,6 @@ $(document).ready(function() {
 
     joystick = new createjs.Shape();
     joystick.graphics.beginFill('red').drawCircle(0, 0, controller.joystickRadius)
-		.beginFill('white').drawCircle(0, 0, controller.joystickRadius)
 		.beginFill('red').drawCircle(0, 0, (controller.joystickRadius - controller.joystickDiff))
 		.beginFill('red').drawCircle(0, 0, (controller.joystickRadius - controller.joystickDiff * 2))
 		.beginFill('red').drawCircle(0, 0, (controller.joystickRadius - controller.joystickDiff * 3))
@@ -69,7 +68,16 @@ $(document).ready(function() {
 
 	joystick.on('pressmove', function(evt) {
 		controller.controlling = true;
-		evt.currentTarget.x = evt.stageX;
+		var actualX = evt.stageX;
+		var actualY = evt.stageY;
+		var dx = actualX - controller.joystickIniPos.x;
+		var dy = actualY - controller.joystickIniPos.y;
+		var dist = Math.sqrt(dx * dx + dy * dy);
+		if (dist > controller.joystickRange.radius) {
+			actualX = controller.joystickIniPos.x + dx / dist * controller.joystickRange.radius;
+			actualY = controller.joystickIniPos.y + dy / dist * controller.joystickRange.radius;
+		}
+		/*evt.currentTarget.x = evt.stageX;
 		if (evt.currentTarget.x > (controller.joystickIniPos.x + controller.joystickRange.x)) {
 			evt.currentTarget.x = (controller.joystickIniPos.x + controller.joystickRange.x);
 		}
@@ -82,7 +90,9 @@ $(document).ready(function() {
 		}
 		else if (evt.currentTarget.y < (controller.joystickIniPos.y - controller.joystickRange.y)) {
 			evt.currentTarget.y = (controller.joystickIniPos.y - controller.joystickRange.y);
-		}
+		}*/
+		evt.currentTarget.x = actualX;
+		evt.currentTarget.y = actualY;
 		controller.joystickCurPos.x = evt.currentTarget.x;
 		controller.joystickCurPos.y = evt.currentTarget.y;
 		controller.stage.update();
@@ -105,177 +115,223 @@ $(document).ready(function() {
 	
 	document.onkeydown = function(event) {
 		if (event.keyCode == 37) {
-			if (multiControl != 0 && multiControl != 2 && multiControl != 4) return;
-			controller.controlling = true;
-			createjs.Tween.get(joystick, {loop: false})
-				.to({x: (controller.joystickIniPos.x - controller.joystickRange.x)}, 
-				500, createjs.Ease.getPowInOut(4));
-			createjs.Ticker.setFPS(60);
-			createjs.Ticker.addEventListener("tick", controller.stage);
-			controller.joystickCurPos.x = (controller.joystickIniPos.x - controller.joystickRange.x);
-			if (multiControl == 2) {
+			var dstX = controller.joystickIniPos.x;
+			var dstY = controller.joystickIniPos.y;
+			if (multiControl == 0) {
+				multiControl = 1;
+				dstX = (controller.joystickIniPos.x - controller.joystickRange.radius);
+			}
+			else if (multiControl == 2) {
 				multiControl = 5;
+				dstX = (controller.joystickIniPos.x - Math.sqrt(2) / 2 * controller.joystickRange.radius);
+				dstY = (controller.joystickIniPos.y - Math.sqrt(2) / 2 * controller.joystickRange.radius);
 			}
 			else if (multiControl == 4) {
 				multiControl = 6;
+				dstX = (controller.joystickIniPos.x - Math.sqrt(2) / 2 * controller.joystickRange.radius);
+				dstY = (controller.joystickIniPos.y + Math.sqrt(2) / 2 * controller.joystickRange.radius);
 			}
-			else {
-				multiControl = 1;
-			}
+			else return;
+			controller.controlling = true;
+			createjs.Tween.get(joystick, {loop: false})
+				.to({x: dstX, y: dstY}, 
+				500, createjs.Ease.getPowInOut(4));
+			createjs.Ticker.setFPS(60);
+			createjs.Ticker.addEventListener("tick", controller.stage);
+			controller.joystickCurPos.x = dstX;
+			controller.joystickCurPos.y = dstY;
 			controller.stage.update();
 		}
 		else if (event.keyCode == 38) {
-			if (multiControl != 0 && multiControl != 1 && multiControl != 3) return;
-			controller.controlling = true;
-			createjs.Tween.get(joystick, {loop: false})
-				.to({y: (controller.joystickIniPos.y - controller.joystickRange.y)}, 
-				500, createjs.Ease.getPowInOut(4));
-			createjs.Ticker.setFPS(60);
-			createjs.Ticker.addEventListener("tick", controller.stage);
-			controller.joystickCurPos.y = (controller.joystickIniPos.y - controller.joystickRange.y);
-			if (multiControl == 1) {
+			var dstX = controller.joystickIniPos.x;
+			var dstY = controller.joystickIniPos.y;
+			if (multiControl == 0) {
+				multiControl = 2;
+				dstY = (controller.joystickIniPos.y - controller.joystickRange.radius);
+			}
+			else if (multiControl == 1) {
 				multiControl = 5;
+				dstX = (controller.joystickIniPos.x - Math.sqrt(2) / 2 * controller.joystickRange.radius);
+				dstY = (controller.joystickIniPos.y - Math.sqrt(2) / 2 * controller.joystickRange.radius);
 			}
 			else if (multiControl == 3) {
 				multiControl = 7;
+				dstX = (controller.joystickIniPos.x + Math.sqrt(2) / 2 * controller.joystickRange.radius);
+				dstY = (controller.joystickIniPos.y - Math.sqrt(2) / 2 * controller.joystickRange.radius);
 			}
-			else {
-				multiControl = 2;
-			}
+			else return;
+			controller.controlling = true;
+			createjs.Tween.get(joystick, {loop: false})
+				.to({x: dstX, y: dstY}, 
+				500, createjs.Ease.getPowInOut(4));
+			createjs.Ticker.setFPS(60);
+			createjs.Ticker.addEventListener("tick", controller.stage);
+			controller.joystickCurPos.x = dstX;
+			controller.joystickCurPos.y = dstY;
 			controller.stage.update();
 		}
 		else if (event.keyCode == 39) {
-			if (multiControl != 0 && multiControl != 2 && multiControl != 4) return;
-			controller.controlling = true;
-			createjs.Tween.get(joystick, {loop: false})
-				.to({x: (controller.joystickIniPos.x + controller.joystickRange.x)}, 
-				500, createjs.Ease.getPowInOut(4));
-			createjs.Ticker.setFPS(60);
-			createjs.Ticker.addEventListener("tick", controller.stage);
-			controller.joystickCurPos.x = (controller.joystickIniPos.x + controller.joystickRange.x);
-			if (multiControl == 2) {
+			var dstX = controller.joystickIniPos.x;
+			var dstY = controller.joystickIniPos.y;
+			if (multiControl == 0) {
+				multiControl = 3;
+				dstX = (controller.joystickIniPos.x + controller.joystickRange.radius);
+			}
+			else if (multiControl == 2) {
 				multiControl = 7;
+				dstX = (controller.joystickIniPos.x + Math.sqrt(2) / 2 * controller.joystickRange.radius);
+				dstY = (controller.joystickIniPos.y - Math.sqrt(2) / 2 * controller.joystickRange.radius);
 			}
 			else if (multiControl == 4) {
 				multiControl = 8;
+				dstX = (controller.joystickIniPos.x + Math.sqrt(2) / 2 * controller.joystickRange.radius);
+				dstY = (controller.joystickIniPos.y + Math.sqrt(2) / 2 * controller.joystickRange.radius);
 			}
-			else {
-				multiControl = 3;
-			}
-			controller.stage.update();
-		}
-		else if (event.keyCode == 40) {
-			if (multiControl != 0 && multiControl != 1 && multiControl != 3) return;
+			else return;
 			controller.controlling = true;
 			createjs.Tween.get(joystick, {loop: false})
-				.to({y: (controller.joystickIniPos.y + controller.joystickRange.y)}, 
+				.to({x: dstX, y: dstY}, 
 				500, createjs.Ease.getPowInOut(4));
 			createjs.Ticker.setFPS(60);
 			createjs.Ticker.addEventListener("tick", controller.stage);
-			controller.joystickCurPos.y = (controller.joystickIniPos.y + controller.joystickRange.y);
-			if (multiControl == 1) {
+			controller.joystickCurPos.x = dstX;
+			controller.joystickCurPos.y = dstY;
+			controller.stage.update();
+		}
+		else if (event.keyCode == 40) {
+			var dstX = controller.joystickIniPos.x;
+			var dstY = controller.joystickIniPos.y;
+			if (multiControl == 0) {
+				multiControl = 4;
+				dstY = (controller.joystickIniPos.y + controller.joystickRange.radius);
+			}
+			else if (multiControl == 1) {
 				multiControl = 6;
+				dstX = (controller.joystickIniPos.x - Math.sqrt(2) / 2 * controller.joystickRange.radius);
+				dstY = (controller.joystickIniPos.y + Math.sqrt(2) / 2 * controller.joystickRange.radius);
 			}
 			else if (multiControl == 3) {
 				multiControl = 8;
+				dstX = (controller.joystickIniPos.x + Math.sqrt(2) / 2 * controller.joystickRange.radius);
+				dstY = (controller.joystickIniPos.y + Math.sqrt(2) / 2 * controller.joystickRange.radius);
 			}
-			else {
-				multiControl = 4;
-			}
+			else return;
+			controller.controlling = true;
+			createjs.Tween.get(joystick, {loop: false})
+				.to({x: dstX, y: dstY}, 
+				500, createjs.Ease.getPowInOut(4));
+			createjs.Ticker.setFPS(60);
+			createjs.Ticker.addEventListener("tick", controller.stage);
+			controller.joystickCurPos.x = dstX;
+			controller.joystickCurPos.y = dstY;
 			controller.stage.update();
 		}
 	};
 	
 	document.onkeyup = function(event) {
 		if (event.keyCode == 37) {
-			if (multiControl != 5 && multiControl != 6 && multiControl != 1) return;
-			createjs.Tween.get(joystick, {loop: false})
-				.to({x: controller.joystickIniPos.x}, 
-				500, createjs.Ease.getPowInOut(4));
-			createjs.Ticker.setFPS(60);
-			createjs.Ticker.addEventListener("tick", controller.stage);
-			controller.joystickCurPos.x = controller.joystickIniPos.x;
-			if (multiControl == 5) {
+			var dstX = controller.joystickIniPos.x;
+			var dstY = controller.joystickIniPos.y;
+			if (multiControl == 1) {
+				multiControl = 0;
+				controller.controlling = false;
+				controller.planeResetSpeed();
+			}
+			else if (multiControl == 5) {
 				multiControl = 2;
+				dstY = (controller.joystickIniPos.y - controller.joystickRange.radius);
 			}
 			else if (multiControl == 6) {
 				multiControl = 4;
+				dstY = (controller.joystickIniPos.y + controller.joystickRange.radius);
 			}
-			else {
-				multiControl = 0;
-			}
-			controller.stage.update();
-			if (multiControl == 0) {
-				controller.controlling = false;
-			}
-		}
-		if (event.keyCode == 38) {
-			if (multiControl != 5 && multiControl != 7 && multiControl != 2) return;
+			else return;
 			createjs.Tween.get(joystick, {loop: false})
-				.to({y: controller.joystickIniPos.y}, 
+				.to({x: dstX, y: dstY}, 
 				500, createjs.Ease.getPowInOut(4));
 			createjs.Ticker.setFPS(60);
 			createjs.Ticker.addEventListener("tick", controller.stage);
-			controller.joystickCurPos.y = controller.joystickIniPos.y;
-			controller.planeResetSpeed();
-			if (multiControl == 5) {
+			controller.joystickCurPos.x = dstX;
+			controller.joystickCurPos.y = dstY;
+			controller.stage.update();
+		}
+		if (event.keyCode == 38) {
+			var dstX = controller.joystickIniPos.x;
+			var dstY = controller.joystickIniPos.y;
+			if (multiControl == 2) {
+				multiControl = 0;
+				controller.controlling = false;
+				controller.planeResetSpeed();
+			}
+			else if (multiControl == 5) {
 				multiControl = 1;
+				dstX = (controller.joystickIniPos.x - controller.joystickRange.radius);
 			}
 			else if (multiControl == 7) {
 				multiControl = 3;
+				dstX = (controller.joystickIniPos.x + controller.joystickRange.radius);
 			}
-			else {
-				multiControl = 0;
-			}
-			controller.stage.update();
-			if (multiControl == 0) {
-				controller.controlling = false;
-			}
-		}
-		if (event.keyCode == 39) {
-			if (multiControl != 7 && multiControl != 8 && multiControl != 3) return;
+			else return;
 			createjs.Tween.get(joystick, {loop: false})
-				.to({x: controller.joystickIniPos.x}, 
+				.to({x: dstX, y: dstY}, 
 				500, createjs.Ease.getPowInOut(4));
 			createjs.Ticker.setFPS(60);
 			createjs.Ticker.addEventListener("tick", controller.stage);
-			controller.joystickCurPos.x = controller.joystickIniPos.x;
-			if (multiControl == 7) {
+			controller.joystickCurPos.x = dstX;
+			controller.joystickCurPos.y = dstY;
+			controller.stage.update();
+		}
+		if (event.keyCode == 39) {
+			var dstX = controller.joystickIniPos.x;
+			var dstY = controller.joystickIniPos.y;
+			if (multiControl == 3) {
+				multiControl = 0;
+				controller.controlling = false;
+				controller.planeResetSpeed();
+			}
+			else if (multiControl == 7) {
 				multiControl = 2;
+				dstY = (controller.joystickIniPos.y - controller.joystickRange.radius);
 			}
 			else if (multiControl == 8) {
 				multiControl = 4;
+				dstY = (controller.joystickIniPos.y + controller.joystickRange.radius);
 			}
-			else {
-				multiControl = 0;
-			}
-			controller.stage.update();
-			if (multiControl == 0) {
-				controller.controlling = false;
-			}
-		}
-		if (event.keyCode == 40) {
-			if (multiControl != 6 && multiControl != 8 && multiControl != 4) return;
+			else return;
 			createjs.Tween.get(joystick, {loop: false})
-				.to({y: controller.joystickIniPos.y}, 
+				.to({x: dstX, y: dstY}, 
 				500, createjs.Ease.getPowInOut(4));
 			createjs.Ticker.setFPS(60);
 			createjs.Ticker.addEventListener("tick", controller.stage);
-			controller.joystickCurPos.y = controller.joystickIniPos.y;
-			controller.planeResetSpeed();
-			if (multiControl == 6) {
+			controller.joystickCurPos.x = dstX;
+			controller.joystickCurPos.y = dstY;
+			controller.stage.update();
+		}
+		if (event.keyCode == 40) {
+			var dstX = controller.joystickIniPos.x;
+			var dstY = controller.joystickIniPos.y;
+			if (multiControl == 4) {
+				multiControl = 0;
+				controller.controlling = false;
+				controller.planeResetSpeed();
+			}
+			else if (multiControl == 6) {
 				multiControl = 1;
+				dstX = (controller.joystickIniPos.x - controller.joystickRange.radius);
 			}
 			else if (multiControl == 8) {
 				multiControl = 3;
+				dstX = (controller.joystickIniPos.x + controller.joystickRange.radius);
 			}
-			else {
-				multiControl = 0;
-			}
+			else return;
+			createjs.Tween.get(joystick, {loop: false})
+				.to({x: dstX, y: dstY}, 
+				500, createjs.Ease.getPowInOut(4));
+			createjs.Ticker.setFPS(60);
+			createjs.Ticker.addEventListener("tick", controller.stage);
+			controller.joystickCurPos.x = dstX;
+			controller.joystickCurPos.y = dstY;
 			controller.stage.update();
-			if (multiControl == 0) {
-				controller.controlling = false;
-			}
 		}
 	};
     var btnFire = document.getElementById('btn-fire');

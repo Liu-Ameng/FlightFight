@@ -13,6 +13,7 @@ FF.Controller = function() {
     this.joystickRange = {
         x: 40,
         y: 40,
+		radius: 40
     };
     this.joystickRadius = 30;
 	this.joystickDiff = 2;
