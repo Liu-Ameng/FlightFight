@@ -110,17 +110,35 @@ FF.View.prototype.updateFlyObj = function(resObj) {
             }
             if(flag)
             {
-                flyObj.x = resObj.x;
-                flyObj.y = resObj.y;
-                flyObj.rotation = resObj.angle * 180 / Math.PI;
-                if (flyObj.type === 'b') {
-                    flyObj.regX = this.bulletOffsetX;
-                    flyObj.regY = this.bulletOffsetY;
-                }
-                else if (flyObj.type === 'f') {
-                    flyObj.regX = this.planeOffsetX;
-                    flyObj.regY = this.planeOffsetY;
-                }
+				if ((Math.abs(flyObj.x - resObj.x) + Math.abs(flyObj.y - resObj.y)) > 50) {
+					flyObj.x = resObj.x;
+					flyObj.y = resObj.y;
+					flyObj.rotation = resObj.angle * 180 / Math.PI;
+					if (flyObj.type === 'b') {
+						flyObj.regX = this.bulletOffsetX;
+						flyObj.regY = this.bulletOffsetY;
+					}
+					else if (flyObj.type === 'f') {
+						flyObj.regX = this.planeOffsetX;
+						flyObj.regY = this.planeOffsetY;
+					}
+				}
+				else {
+					if (flyObj.type === 'b') {
+						createjs.Tween.get(flyObj, {loop: false})
+								.to({x: resObj.x, y: resObj.y, rotation: (resObj.angle * 180 / Math.PI), regX: this.bulletOffsetX, regY: this.bulletOffsetY},
+								50);
+						createjs.Ticker.setFPS(60);
+						createjs.Ticker.addEventListener('tick', this.stage);
+					}
+					else if (flyObj.type === 'f') {
+						createjs.Tween.get(flyObj, {loop: false})
+								.to({x: resObj.x, y: resObj.y, rotation: (resObj.angle * 180 / Math.PI), regX: this.planeOffsetX, regY: this.planeOffsetY},
+								50);
+						createjs.Ticker.setFPS(60);
+						createjs.Ticker.addEventListener('tick', this.stage);
+					}
+				}
                 return flyObj;
             }
 

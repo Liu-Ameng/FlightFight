@@ -6,7 +6,7 @@ var util = require('util');
         stageSize: 700,
         flightSpeed: 2,
         bulletSpeed: 5,
-        flightCrashRange: 8,
+        flightCrashRange: 12,
         bulletCrashRange: 2,
         flightImg: 'flight',
         bulletImg: 'bullet',
