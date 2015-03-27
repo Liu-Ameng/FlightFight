@@ -1,0 +1,7 @@
+{
+  "name": "Flight Fight",
+  "description": "A flight fight online game",
+  "repository": "https://github.com/Liu-Ameng/FlightFight",
+  "logo": "http://node-js-sample.herokuapp.com/node.svg",
+  "keywords": ["node", "express", "socket"]
+}

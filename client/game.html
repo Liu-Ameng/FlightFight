@@ -8,9 +8,8 @@
 <link rel="icon" href="img/favicon.ico">
 
 <title>Games on HTML5 - Flight Fight</title>
-<link
-  href="http://cdn.bootcss.com/bootstrap/3.3.2/css/bootstrap.min.css"
-  rel="stylesheet">
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/bootstrap-theme.min.css" rel="stylesheet">
 <link href="css/ladda.min.css" rel="stylesheet">
 <link href="css/common.css" rel="stylesheet">
 <link href="css/overlay.css" rel="stylesheet">
@@ -24,7 +23,6 @@
     <div class="panel-all">
       <div class="panel-left">
         <div id="left-message" class="info">
-          <div class="alert alert-success" role="alert">...</div>
         </div>
         <div class="left-control">
           <canvas id="move-control-canvas" width="160" height="160">
@@ -38,12 +36,17 @@
       </div>
       <div class="panel-right">
         <ul class="info">
+            <li>FPS</li>
+            <li id="show-fps" class="show-fps"></li>
+            <li>&nbsp</li>
             <li>Shoot down</li>
             <li id="shoot-down-list"></li>
         </ul>
         <div class="right-control">
           <button id="btn-fire" class="ladda-button" data-color="red" data-style="zoom-out">Fire!</button>
+          <!--
           <button id="btn-block" class="ladda-button" data-color="red" data-style="zoom-out">Shield</button>
+          -->
         </div>
       </div>
     </div>
@@ -79,7 +82,7 @@
 
   <script src="js/libs/jquery-1.11.2.min.js"></script>
   <script
-    src="http://cdn.bootcss.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    src="js/bootstrap.min.js"></script>
   <script src="https://code.createjs.com/createjs-2014.12.12.min.js"></script>
   <!--
   <script src="js/libs/handlebars-v1.3.0.js"></script>

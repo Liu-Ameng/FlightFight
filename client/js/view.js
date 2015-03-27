@@ -17,6 +17,10 @@ FF.View = function(data) {
 	this.packetInterval = 160;
 };
 
+FF.View.prototype.showFPS = function() {
+    $('#show-fps').text( Math.round(8000.0/FF.timeBetweenFrame) );
+};
+
 FF.View.prototype.paint = function(res) {
     'use strict';
     for (var i = 0; i < res.length; ++i) {

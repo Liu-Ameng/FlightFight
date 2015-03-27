@@ -7,7 +7,17 @@ window.FF = {
     socket: null,
     playerId: '',
     killList: [],
-    killedBy: ''
+    killedBy: '',
+
+    timeBetweenFrame: 160,
+    timeOfLastFrame: null,
+    calcTimeBetweenFrame: function(){
+        var t = new Date();
+        if(this.timeOfLastFrame !== null) {
+            this.timeBetweenFrame = t.getTime() - this.timeOfLastFrame.getTime();
+        }
+        this.timeOfLastFrame = t;
+    }
 };
 
 // Events
@@ -51,6 +61,8 @@ $(document).ready(function() {
 
     socket.on('send-pos', function(res) {
         //console.debug(res);
+        FF.calcTimeBetweenFrame();
+        view.showFPS();
         view.paint(res);
     });
 

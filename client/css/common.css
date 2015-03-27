@@ -20,11 +20,12 @@ body {
 
 .panel-all {
   width: 1100px;
-  margin: 1em auto;
+  margin: 2em auto;
 }
 
 .panel-center {
   display: inline-block;
+  vertical-align: top;
 }
 
 .panel-left {
@@ -90,4 +91,9 @@ ul {
           box-shadow: 0px 2px 0px #797979;
   position:relative;
   top:7px;
+}
+
+.info .show-fps {
+  font-size: 200%;
+  font-weight: bold;
 }

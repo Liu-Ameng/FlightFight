@@ -156,10 +156,12 @@ var async = require('async');
                     if (p !== null) {
                         if (this.flyings[key] && this.flyings[key].isCrash(p.flight) === true) {
                             for (key3 in this.players) {
-                                this.players[key3].socket.emit(CONST.playerDead, {
-                                    killer: this.players[this.flyings[key].owner].toJson(),
-                                    killed: this.players[key2].toJson()
-                                });
+                                if(this.players[this.flyings[key].owner] !== undefined) {
+                                    this.players[key3].socket.emit(CONST.playerDead, {
+                                        killer: this.players[this.flyings[key].owner].toJson(),
+                                        killed: this.players[key2].toJson()
+                                    });
+                                }
                             }
                             delete this.players[key2];
                             this.players[this.flyings[key].owner].score++;
