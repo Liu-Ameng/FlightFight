@@ -110,38 +110,42 @@ FF.View.prototype.updateFlyObj = function(resObj) {
             }
             if(flag)
             {
-				if ((Math.abs(flyObj.x - resObj.x) + Math.abs(flyObj.y - resObj.y)) > 50) {
-					flyObj.x = resObj.x;
-					flyObj.y = resObj.y;
-					flyObj.rotation = resObj.angle * 180 / Math.PI;
+				if ((Math.abs(flyObj.x - resObj.x) + Math.abs(flyObj.y - resObj.y)) > 200) {
 					if (flyObj.type === 'b') {
-						flyObj.regX = this.bulletOffsetX;
-						flyObj.regY = this.bulletOffsetY;
+						createjs.Tween.get(flyObj, {loop: false})
+								.to({x: resObj.x, y: resObj.y, rotation: (resObj.angle * 180 / Math.PI), regX: this.bulletOffsetX, regY: this.bulletOffsetY},
+								160);
+						createjs.Ticker.setFPS(60);
+						createjs.Ticker.addEventListener('tick', this.stage);
 					}
 					else if (flyObj.type === 'f') {
-						flyObj.regX = this.planeOffsetX;
-						flyObj.regY = this.planeOffsetY;
+						createjs.Tween.get(flyObj, {loop: false})
+								.to({alpha: 0}, 70)
+								.to({x: resObj.x, y: resObj.y, rotation: (resObj.angle * 180 / Math.PI), regX: this.planeOffsetX, regY: this.planeOffsetY},
+								20)
+								.to({alpha: 1.0}, 70);
+						createjs.Ticker.setFPS(60);
+						createjs.Ticker.addEventListener('tick', this.stage);
 					}
 				}
 				else {
 					if (flyObj.type === 'b') {
 						createjs.Tween.get(flyObj, {loop: false})
 								.to({x: resObj.x, y: resObj.y, rotation: (resObj.angle * 180 / Math.PI), regX: this.bulletOffsetX, regY: this.bulletOffsetY},
-								50);
+								160);
 						createjs.Ticker.setFPS(60);
 						createjs.Ticker.addEventListener('tick', this.stage);
 					}
 					else if (flyObj.type === 'f') {
 						createjs.Tween.get(flyObj, {loop: false})
 								.to({x: resObj.x, y: resObj.y, rotation: (resObj.angle * 180 / Math.PI), regX: this.planeOffsetX, regY: this.planeOffsetY},
-								50);
+								160);
 						createjs.Ticker.setFPS(60);
 						createjs.Ticker.addEventListener('tick', this.stage);
 					}
 				}
                 return flyObj;
             }
-
         }
     }
     return this.createFlyObj(resObj);
@@ -193,7 +197,7 @@ FF.View.prototype.createFlyObj = function(resObj) {
                 f.rotation = resObj.angle * 180 / Math.PI;
                 f.scaleX = 0.25;
                 f.scaleY = 0.25;
-                f.alpha = 0.8;
+                f.alpha = 1.0;
                 f.id = resObj.id;
                 f.name = resObj.name;
                 f.type = resObj.type;

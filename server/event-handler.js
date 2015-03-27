@@ -249,7 +249,7 @@ var async = require('async');
 
     };
 
-    var fts = 60; // frame per second
+    var fts = 50; // frame per second
     var gameTimer; // = setInterval(gameLoop, 1000/fts);
     var sendFlg = 0;
 
@@ -261,7 +261,7 @@ var async = require('async');
         if (sendFlg === 0) {
             AllPlayers.sendPos();
         }
-        sendFlg = (sendFlg + 1) & 3;
+        sendFlg = (sendFlg + 1) & 7;
         //wait a moment and do again
 
     }

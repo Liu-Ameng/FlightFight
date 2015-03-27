@@ -5,15 +5,15 @@ var util = require('util');
     var CONST = {
         stageSize: 700,
         flightSpeed: 2,
-        bulletSpeed: 5,
+        bulletSpeed: 6,
         flightCrashRange: 12,
         bulletCrashRange: 2,
         flightImg: 'flight',
         bulletImg: 'bullet',
         minFlightSpeed: 1,
-        maxFlightSpeed: 3,
+        maxFlightSpeed: 4,
         speedAcceleration: 0.05,
-        angleAcceleration: 0.005
+        angleAcceleration: 0.01
     };
 
     /*
@@ -142,8 +142,8 @@ var util = require('util');
             else if (this.v.speed < CONST.minFlightSpeed) this.v.speed = CONST.minFlightSpeed;
             // angle controller
             this.v.angle += (data.offset_angle * CONST.angleAcceleration);
-            if (this.v.angle > 2 * Math.PI) this.v.angle -= (2 * Math.PI);
-            else if (this.v.angle < 0) this.v.angle += (2 * Math.PI);
+            //if (this.v.angle > 2 * Math.PI) this.v.angle -= (2 * Math.PI);
+            //else if (this.v.angle < 0) this.v.angle += (2 * Math.PI);
         };
 
         // reset speed
@@ -153,6 +153,13 @@ var util = require('util');
         //@override
         Flight.prototype.whenOutOfRange = function() {
             this.p.set(CONST.stageSize - this.p.x, CONST.stageSize - this.p.y);
+			var targetX = this.p.x;
+			if (targetX < 0) targetX = -targetX;
+			else if (targetX > CONST.stageSize) targetX = 2 * CONST.stageSize - targetX;
+			var targetY = this.p.y;
+			if (targetY < 0) targetY = -targetY;
+			else if (targetY > CONST.stageSize) targetY = 2 * CONST.stageSize - targetY;
+            this.p.set(targetX, targetY);
             return false;
         };
     }
@@ -176,7 +183,7 @@ var util = require('util');
             this.owner = flight.owner;
             this.v.angle = flight.v.angle;
             //this.p.set(flight.p.x+36*Math.cos(flight.v.angle+0.467), flight.p.y+36*Math.sin(flight.v.angle+0.467));
-			this.p.set(flight.p.x+20*Math.cos(flight.v.angle), flight.p.y+20*Math.sin(flight.v.angle));
+			this.p.set(flight.p.x+16*Math.cos(flight.v.angle), flight.p.y+16*Math.sin(flight.v.angle));
         }
     }
 
