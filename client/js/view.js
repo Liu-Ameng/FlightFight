@@ -7,10 +7,10 @@ FF.View = function(data) {
     this.controller = null;
     this.xOffset = 10;
     this.yOffset = 10;
-	this.planeOffsetX = 64;
-	this.planeOffsetY = 64;
-	this.bulletOffsetX = 8;
-	this.bulletOffsetY = 4;
+    this.planeOffsetX = 64;
+    this.planeOffsetY = 64;
+    this.bulletOffsetX = 8;
+    this.bulletOffsetY = 4;
     this.allFlyObjs = [];
     this.allFlyNames = [];
 };
@@ -40,20 +40,27 @@ FF.View.prototype.remove = function(res) {
 
 FF.View.prototype.kill = function(res) {
     'use strict';
-    var id = res.killed.id;
+    var thisFlyObj;
+    var stage = this.stage;
 
     for (var i = this.allFlyObjs.length - 1; i >= 0; --i) {
-        if (this.allFlyObjs[i].id === res.killed.id) {
-			if (this.allFlyObjs[i].type == 'f') {
-				createjs.Tween.get(this.allFlyObjs[i], {loop: false})
-					.to({alpha: 0, scaleX: 1, scaleY: 1},
-					1000, createjs.Ease.getPowInOut(4));
-				createjs.Ticker.setFPS(60);
-				createjs.Ticker.addEventListener('tick', this.stage);
-			}
-            //因为子弹和其所属飞机的id是一样的，这一步就可以同时删除飞机和子弹
-            this.stage.removeChild(this.allFlyObjs[i]);
-            this.allFlyObjs.splice(i, 1);
+        thisFlyObj = this.allFlyObjs[i];
+        if (thisFlyObj.id === res.killed.id) {
+            if (thisFlyObj.type === 'f') {
+                createjs.Tween.get(thisFlyObj, {loop: false})
+                    .to({alpha: 0, scaleX: 1, scaleY: 1},
+                    1000, createjs.Ease.getPowInOut(4))
+                    .call(function(){
+                        stage.removeChile(thisFlyObj);
+                        this.allFlyObjs.splice(i, 1);
+                    });
+                createjs.Ticker.setFPS(60);
+                createjs.Ticker.addEventListener('tick', stage);
+            }
+            if (thisFlyObj.type === 'b') {
+                stage.removeChild(this.allFlyObjs[i]);
+                this.allFlyObjs.splice(i, 1);
+            }
         }
     }
     if(res.killer.id === FF.playerId) {
@@ -94,7 +101,7 @@ FF.View.prototype.updateFlyObj = function(resObj) {
         flyObj = this.allFlyObjs[i];
         if (flyObj.id === resObj.id && flyObj.type === resObj.type ) {
             flag = true;
-            if(resObj.type == 'b')
+            if(resObj.type === 'b')
             {
                 if(resObj.order != flyObj.order)
                 {
@@ -106,14 +113,14 @@ FF.View.prototype.updateFlyObj = function(resObj) {
                 flyObj.x = resObj.x;
                 flyObj.y = resObj.y;
                 flyObj.rotation = resObj.angle * 180 / Math.PI;
-				if (flyObj.type == 'b') {
-					flyObj.regX = this.bulletOffsetX;
-					flyObj.regY = this.bulletOffsetY;
-				}
-				else if (flyObj.type == 'f') {
-					flyObj.regX = this.planeOffsetX;
-					flyObj.regY = this.planeOffsetY;
-				}
+                if (flyObj.type === 'b') {
+                    flyObj.regX = this.bulletOffsetX;
+                    flyObj.regY = this.bulletOffsetY;
+                }
+                else if (flyObj.type === 'f') {
+                    flyObj.regX = this.planeOffsetX;
+                    flyObj.regY = this.planeOffsetY;
+                }
                 return flyObj;
             }
 
