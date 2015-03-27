@@ -81,7 +81,7 @@ FF.Controller.prototype.defineJoystick = function() {
         evt.currentTarget.y = actualY;
         controller.joystickCurPos.x = evt.currentTarget.x;
         controller.joystickCurPos.y = evt.currentTarget.y;
-        controller.stage.update();
+        //controller.stage.update();
     });
 
     joystick.on('pressup', function(evt) {
@@ -93,8 +93,8 @@ FF.Controller.prototype.defineJoystick = function() {
         createjs.Tween.get(joystick, {loop: false})
             .to({x: controller.joystickIniPos.x, y: controller.joystickIniPos.y},
             500, createjs.Ease.getPowInOut(4));
-        createjs.Ticker.setFPS(60);
-        createjs.Ticker.addEventListener('tick', controller.stage);
+        //createjs.Ticker.setFPS(60);
+        //createjs.Ticker.addEventListener('tick', controller.stage);
     });
 
     this.joystick = joystick;
@@ -160,11 +160,11 @@ FF.Controller.prototype.defineKeyEvent = function() {
             createjs.Tween.get(joystick, {loop: false})
                 .to({x: dstX, y: dstY},
                 500, createjs.Ease.getPowInOut(4));
-            createjs.Ticker.setFPS(60);
-            createjs.Ticker.addEventListener('tick', controller.stage);
+            //createjs.Ticker.setFPS(60);
+            //createjs.Ticker.addEventListener('tick', controller.stage);
             controller.joystickCurPos.x = dstX;
             controller.joystickCurPos.y = dstY;
-            controller.stage.update();
+            //controller.stage.update();
         }
         else if (event.keyCode == 38) {
             dstX = controller.joystickIniPos.x;
@@ -188,11 +188,11 @@ FF.Controller.prototype.defineKeyEvent = function() {
             createjs.Tween.get(joystick, {loop: false})
                 .to({x: dstX, y: dstY},
                 500, createjs.Ease.getPowInOut(4));
-            createjs.Ticker.setFPS(60);
-            createjs.Ticker.addEventListener('tick', controller.stage);
+            //createjs.Ticker.setFPS(60);
+            //createjs.Ticker.addEventListener('tick', controller.stage);
             controller.joystickCurPos.x = dstX;
             controller.joystickCurPos.y = dstY;
-            controller.stage.update();
+            //controller.stage.update();
         }
         else if (event.keyCode == 39) {
             dstX = controller.joystickIniPos.x;
@@ -216,11 +216,11 @@ FF.Controller.prototype.defineKeyEvent = function() {
             createjs.Tween.get(joystick, {loop: false})
                 .to({x: dstX, y: dstY},
                 500, createjs.Ease.getPowInOut(4));
-            createjs.Ticker.setFPS(60);
-            createjs.Ticker.addEventListener('tick', controller.stage);
+            //createjs.Ticker.setFPS(60);
+            //createjs.Ticker.addEventListener('tick', controller.stage);
             controller.joystickCurPos.x = dstX;
             controller.joystickCurPos.y = dstY;
-            controller.stage.update();
+            //controller.stage.update();
         }
         else if (event.keyCode == 40) {
             dstX = controller.joystickIniPos.x;
@@ -244,11 +244,11 @@ FF.Controller.prototype.defineKeyEvent = function() {
             createjs.Tween.get(joystick, {loop: false})
                 .to({x: dstX, y: dstY},
                 500, createjs.Ease.getPowInOut(4));
-            createjs.Ticker.setFPS(60);
-            createjs.Ticker.addEventListener('tick', controller.stage);
+            //createjs.Ticker.setFPS(60);
+            //createjs.Ticker.addEventListener('tick', controller.stage);
             controller.joystickCurPos.x = dstX;
             controller.joystickCurPos.y = dstY;
-            controller.stage.update();
+            //controller.stage.update();
         } else if (event.keyCode == 32) {
             var l = Ladda.create( document.querySelector('#btn-fire') );
             if(l.isLoading()===false){
@@ -279,11 +279,11 @@ FF.Controller.prototype.defineKeyEvent = function() {
             createjs.Tween.get(joystick, {loop: false})
                 .to({x: dstX, y: dstY},
                 500, createjs.Ease.getPowInOut(4));
-            createjs.Ticker.setFPS(60);
-            createjs.Ticker.addEventListener('tick', controller.stage);
+            //createjs.Ticker.setFPS(60);
+            //createjs.Ticker.addEventListener('tick', controller.stage);
             controller.joystickCurPos.x = dstX;
             controller.joystickCurPos.y = dstY;
-            controller.stage.update();
+            //controller.stage.update();
         }
         if (event.keyCode == 38) {
             dstX = controller.joystickIniPos.x;
@@ -305,11 +305,11 @@ FF.Controller.prototype.defineKeyEvent = function() {
             createjs.Tween.get(joystick, {loop: false})
                 .to({x: dstX, y: dstY},
                 500, createjs.Ease.getPowInOut(4));
-            createjs.Ticker.setFPS(60);
-            createjs.Ticker.addEventListener('tick', controller.stage);
+            //createjs.Ticker.setFPS(60);
+            //createjs.Ticker.addEventListener('tick', controller.stage);
             controller.joystickCurPos.x = dstX;
             controller.joystickCurPos.y = dstY;
-            controller.stage.update();
+            //controller.stage.update();
         }
         if (event.keyCode == 39) {
             dstX = controller.joystickIniPos.x;
@@ -331,11 +331,11 @@ FF.Controller.prototype.defineKeyEvent = function() {
             createjs.Tween.get(joystick, {loop: false})
                 .to({x: dstX, y: dstY},
                 500, createjs.Ease.getPowInOut(4));
-            createjs.Ticker.setFPS(60);
-            createjs.Ticker.addEventListener('tick', controller.stage);
+            //createjs.Ticker.setFPS(60);
+            //createjs.Ticker.addEventListener('tick', controller.stage);
             controller.joystickCurPos.x = dstX;
             controller.joystickCurPos.y = dstY;
-            controller.stage.update();
+            //controller.stage.update();
         }
         if (event.keyCode == 40) {
             dstX = controller.joystickIniPos.x;
@@ -357,11 +357,11 @@ FF.Controller.prototype.defineKeyEvent = function() {
             createjs.Tween.get(joystick, {loop: false})
                 .to({x: dstX, y: dstY},
                 500, createjs.Ease.getPowInOut(4));
-            createjs.Ticker.setFPS(60);
-            createjs.Ticker.addEventListener('tick', controller.stage);
+            //createjs.Ticker.setFPS(60);
+            //createjs.Ticker.addEventListener('tick', controller.stage);
             controller.joystickCurPos.x = dstX;
             controller.joystickCurPos.y = dstY;
-            controller.stage.update();
+            //controller.stage.update();
         }
     };
 };

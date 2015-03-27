@@ -12,6 +12,8 @@ window.FF = {
 
 // Events
 $(document).ready(function() {
+	
+	createjs.Ticker.setFPS(60);
 
     var canvas = document.getElementById('game-canvas');
 
@@ -32,10 +34,13 @@ $(document).ready(function() {
         stage: new createjs.Stage('game-canvas')
     });   
     var view = FF.view;
+	createjs.Ticker.addEventListener('tick', FF.view.stage);
 
     console.log('Get connected!');
 
     FF.controller = new FF.Controller();
+	
+	createjs.Ticker.addEventListener('tick', FF.controller.stage);
 
     socket.emit('player-join', localStorage.getItem('playerName'));
 
